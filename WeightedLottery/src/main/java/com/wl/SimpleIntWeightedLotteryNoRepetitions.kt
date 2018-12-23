@@ -26,7 +26,7 @@ class SimpleIntWeightedLotteryNoRepetitions(private val random: Random = ThreadL
             return item
         }
         if (hits.toDouble() / attempts < hitRatioThreshold) {
-
+            // hit ratio dropped. better to reallocate the delegate
 
             val nonSelectedItems = selectedArr.filter { it == 0 }.size
             if (nonSelectedItems == 0) {

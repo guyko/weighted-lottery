@@ -4,12 +4,21 @@ import org.junit.Test
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 abstract class WeightedLotteryWithRepetitionsTestBase {
 
     abstract fun weightedLottery(random: Random, weights: DoubleArray): IntLottery
+
+    @Test
+    fun `empty weights`() {
+        val weightedLottery = weightedLottery(random = ThreadLocalRandom.current(), weights = DoubleArray(0))
+        assertEquals(0, weightedLottery.remaining())
+        assertTrue(weightedLottery.empty())
+        assertFailsWith(NoSuchElementException::class) { weightedLottery.draw() }
+    }
 
     @Test
     fun `one element draw over and over`() {
@@ -29,7 +38,7 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
             val idx = weightedLottery.draw()
             counters[idx] = (counters[idx] ?: 0) + 1
         }
-        assertInRange(15000, counters[0]!!, 200)
+        assertInRange(15000, counters[0]!!, 200)   // binomial distribution
         assertInRange(65000, counters[1]!!, 200)
         assertInRange(20000, counters[2]!!, 200)
         assertEquals(3, weightedLottery.remaining())
@@ -69,9 +78,10 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
         assertFalse(weightedLottery.empty())
     }
 
-    @Test(expected = IllegalArgumentException::class)
+    @Test
     fun `invalid input result in an exception`() {
-        weightedLottery(random = Random(1), weights = arrayOf(-0.1, 0.1).toDoubleArray())
+        assertFailsWith(IllegalArgumentException::class) { weightedLottery(random = Random(1), weights = arrayOf(-0.1, 0.1).toDoubleArray()) }
+        assertFailsWith(IllegalArgumentException::class) { weightedLottery(random = Random(1), weights = arrayOf(Double.NaN, 0.1).toDoubleArray()) }
     }
 
     private fun assertInRange(expected: Int, actual: Int, grace: Int) {

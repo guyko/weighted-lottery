@@ -13,10 +13,15 @@ abstract class WeightedLotteryNoRepetitionsTestBase {
     abstract fun weightedLottery(random: Random, weights: DoubleArray): IntLottery
 
     @Test
+    fun `empty weights`() {
+        val weightedLottery = weightedLottery(random = ThreadLocalRandom.current(), weights = DoubleArray(0))
+        assertNoMoreDraws(weightedLottery)
+    }
+
+    @Test
     fun `one draw for one element`() {
         val weightedLottery = weightedLottery(random = ThreadLocalRandom.current(), weights = arrayOf(1.0).toDoubleArray())
         assertEquals(0, weightedLottery.draw())
-        assertEquals(0, weightedLottery.remaining())
         assertNoMoreDraws(weightedLottery)
     }
 
@@ -25,7 +30,6 @@ abstract class WeightedLotteryNoRepetitionsTestBase {
         val weightedLottery = weightedLottery(random = ThreadLocalRandom.current(), weights = arrayOf(0.2, 0.5, 1.0, 1.0, 0.75).toDoubleArray())
         val elements = (0 until 5).map { weightedLottery.draw() }.toSet()
         assertEquals((0 until 5).toSet(), elements)
-        assertEquals(0, weightedLottery.remaining())
         assertNoMoreDraws(weightedLottery)
     }
 
@@ -34,7 +38,6 @@ abstract class WeightedLotteryNoRepetitionsTestBase {
         val weightedLottery = weightedLottery(random = ThreadLocalRandom.current(), weights = arrayOf(0.0, 0.5, 1.0, 0.0, 0.75).toDoubleArray())
         val elements = (0 until 5).map { weightedLottery.draw() }.toSet()
         assertEquals((0 until 5).toSet(), elements)
-        assertEquals(0, weightedLottery.remaining())
         assertNoMoreDraws(weightedLottery)
     }
 
@@ -43,28 +46,53 @@ abstract class WeightedLotteryNoRepetitionsTestBase {
     fun `100000 draws yield ~ given distribution`() {
         val random = Random(1)
         val counters = mutableMapOf<Int, Int>()
+        val countersWhenFirstWas0_65 = mutableMapOf<Int, Int>()
         (0 until 100000).forEach { _ ->
-            val idx = weightedLottery(random = random, weights = arrayOf(0.15, 0.65, 0.2).toDoubleArray()).draw()
-            counters[idx] = (counters[idx] ?: 0) + 1
+            val weightedLottery = weightedLottery(random = random, weights = arrayOf(0.15, 0.65, 0.2).toDoubleArray())
+            val i0 = weightedLottery.draw()
+            counters[i0] = (counters[i0] ?: 0) + 1
+            if (i0 == 1) {
+                val i1 = weightedLottery.draw()
+                countersWhenFirstWas0_65[i1] = (countersWhenFirstWas0_65[i1] ?: 0) + 1
+            }
         }
         assertInRange(15000, counters[0]!!, 200)
         assertInRange(65000, counters[1]!!, 200)
         assertInRange(20000, counters[2]!!, 200)
+
+
+        assertInRange((counters[1]!! * (0.15 / 0.35)).toInt(), countersWhenFirstWas0_65[0]!!, 200)
+        assertInRange((counters[1]!! * (0.2 / 0.35)).toInt(), countersWhenFirstWas0_65[2]!!, 200)
     }
 
     @Test
     fun `100000 draws yield ~ given distribution when some weights are 0`() {
         val random = Random(1)
         val counters = mutableMapOf<Int, Int>()
+        val countersWhenFirstWas0_2 = mutableMapOf<Int, Int>()
         (0 until 100000).forEach { _ ->
-            val idx = weightedLottery(random = random, weights = arrayOf(0.15, 0.0, 0.2, 0.0, 0.65).toDoubleArray()).draw()
-            counters[idx] = (counters[idx] ?: 0) + 1
+            val weightedLottery = weightedLottery(random = random, weights = arrayOf(0.15, 0.0, 0.2, 0.0, 0.65).toDoubleArray())
+            val i0 = weightedLottery.draw()
+            counters[i0] = (counters[i0] ?: 0) + 1
+            if (i0 == 2) {
+                val i1 = weightedLottery.draw()
+                countersWhenFirstWas0_2[i1] = (countersWhenFirstWas0_2[i1] ?: 0) + 1
+            }
         }
         assertInRange(15000, counters[0]!!, 200)
         assertInRange(20000, counters[2]!!, 200)
         assertInRange(65000, counters[4]!!, 200)
         assertEquals(0, counters[1] ?: 0, "$counters doesn't match weights")
         assertEquals(0, counters[3] ?: 0, "$counters doesn't match weights")
+
+        assertInRange((counters[2]!! * (0.15 / 0.8)).toInt(), countersWhenFirstWas0_2[0]!!, 200)
+        assertInRange((counters[2]!! * (0.65 / 0.8)).toInt(), countersWhenFirstWas0_2[4]!!, 200)
+    }
+
+    @Test
+    fun `invalid input result in an exception`() {
+        assertFailsWith(IllegalArgumentException::class) { weightedLottery(random = Random(1), weights = arrayOf(-0.1, 0.1).toDoubleArray()) }
+        assertFailsWith(IllegalArgumentException::class) { weightedLottery(random = Random(1), weights = arrayOf(Double.NaN, 0.1).toDoubleArray()) }
     }
 
     private fun assertInRange(expected: Int, actual: Int, grace: Int) {
@@ -73,6 +101,7 @@ abstract class WeightedLotteryNoRepetitionsTestBase {
     }
 
     private fun assertNoMoreDraws(weightedLottery: IntLottery) {
+        assertEquals(0, weightedLottery.remaining())
         assertTrue(weightedLottery.empty())
         assertFailsWith(NoSuchElementException::class) { weightedLottery.draw() }
     }
