@@ -20,6 +20,7 @@ class SimpleIntWeightedLotteryNoRepetitions(private val random: Random = ThreadL
         attempts++
         val item = indexMapping[delegate.draw()]
         if (selectedArr[item] == 0) {
+            selected++
             hits++
             selectedArr[item] = 1
             return item
@@ -41,6 +42,7 @@ class SimpleIntWeightedLotteryNoRepetitions(private val random: Random = ThreadL
             }
 
 
+            indexMapping = nonSelectedIndexMapping
             delegate = SimpleIntWeightedLottery(random, maxAttempts, nonSelectedWeights)
             hits = 0
             attempts = 0

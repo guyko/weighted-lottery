@@ -29,12 +29,9 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
             val idx = weightedLottery.draw()
             counters[idx] = (counters[idx] ?: 0) + 1
         }
-        assertTrue(counters[0]!! < 15200, "$counters doesn't match weights")
-        assertTrue(counters[0]!! > 14800, "$counters doesn't match weights")
-        assertTrue(counters[1]!! < 65200, "$counters doesn't match weights")
-        assertTrue(counters[1]!! > 64800, "$counters doesn't match weights")
-        assertTrue(counters[2]!! < 20200, "$counters doesn't match weights")
-        assertTrue(counters[2]!! > 19800, "$counters doesn't match weights")
+        assertInRange(15000, counters[0]!!, 200)
+        assertInRange(65000, counters[1]!!, 200)
+        assertInRange(20000, counters[2]!!, 200)
         assertEquals(3, weightedLottery.remaining())
         assertFalse(weightedLottery.empty())
     }
@@ -47,14 +44,11 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
             val idx = weightedLottery.draw()
             counters[idx] = (counters[idx] ?: 0) + 1
         }
-        assertTrue(counters[0]!! < 15200, "$counters doesn't match weights")
-        assertTrue(counters[0]!! > 14800, "$counters doesn't match weights")
+        assertInRange(15000, counters[0]!!, 200)
+        assertInRange(20000, counters[2]!!, 200)
+        assertInRange(65000, counters[4]!!, 200)
         assertEquals(0, counters[1] ?: 0, "$counters doesn't match weights")
-        assertTrue(counters[2]!! < 20200, "$counters doesn't match weights")
-        assertTrue(counters[2]!! > 19800, "$counters doesn't match weights")
-        assertTrue(counters[4]!! < 65200, "$counters doesn't match weights")
         assertEquals(0, counters[3] ?: 0, "$counters doesn't match weights")
-        assertTrue(counters[4]!! > 64800, "$counters doesn't match weights")
         assertEquals(5, weightedLottery.remaining())
         assertFalse(weightedLottery.empty())
     }
@@ -68,8 +62,7 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
             counters[idx] = (counters[idx] ?: 0) + 1
         }
         (0 until 4).forEach {
-            assertTrue(counters[it]!! < 25500, "$counters doesn't match weights")
-            assertTrue(counters[it]!! > 24500, "$counters doesn't match weights")
+            assertInRange(25000, counters[it]!!, 250)
         }
 
         assertEquals(4, weightedLottery.remaining())
@@ -79,5 +72,10 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
     @Test(expected = IllegalArgumentException::class)
     fun `invalid input result in an exception`() {
         weightedLottery(random = Random(1), weights = arrayOf(-0.1, 0.1).toDoubleArray())
+    }
+
+    private fun assertInRange(expected: Int, actual: Int, grace: Int) {
+        val range = (expected - grace)..(expected + grace)
+        assertTrue(range.contains(actual), "$actual not in range $range")
     }
 }
