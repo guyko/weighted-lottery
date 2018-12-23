@@ -14,6 +14,7 @@
     <kotlin-logging.version>1.5.9</kotlin-logging.version>
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <experimentalCoroutines>enable</experimentalCoroutines>
+    <jmh.version>1.21</jmh.version>
   </properties>
 
   <licenses>
@@ -42,6 +43,22 @@
   <modules>
     <module>WeightedLottery</module>
   </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-core</artifactId>
+      <version>${jmh.version}</version>
+      <scope>test</scope>
+    </dependency>
+
+    <dependency>
+      <groupId>org.openjdk.jmh</groupId>
+      <artifactId>jmh-generator-annprocess</artifactId>
+      <version>${jmh.version}</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
 
   <dependencyManagement>
     <dependencies>
