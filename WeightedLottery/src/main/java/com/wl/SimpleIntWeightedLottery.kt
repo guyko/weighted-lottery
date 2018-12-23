@@ -24,7 +24,7 @@ class SimpleIntWeightedLottery(private val random: Random = ThreadLocalRandom.cu
 
 
     override fun draw(): Int {
-        if (empty()) {
+        if (sumOfWeights == 0.0) {
             logger.warn { "All weights are zero. Draw one uniformly" }
             return random.drawUniformly()
         }
