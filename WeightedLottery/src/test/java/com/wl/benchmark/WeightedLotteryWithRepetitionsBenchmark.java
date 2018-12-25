@@ -19,7 +19,7 @@ import java.util.concurrent.TimeUnit;
 public class WeightedLotteryWithRepetitionsBenchmark {
 
   private static double[] weights = new double[1000];
-  private static int K = 50;
+  private static int K = 100;
 
   static {
     Random random = new Random(1);
