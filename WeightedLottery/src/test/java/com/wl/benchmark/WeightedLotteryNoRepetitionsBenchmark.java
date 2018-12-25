@@ -18,7 +18,8 @@ import java.util.concurrent.TimeUnit;
 //@Fork(1)
 public class WeightedLotteryNoRepetitionsBenchmark {
 
-  private static double[] weights = new double[800];
+  private static double[] weights = new double[1000];
+  private static int K = 50;
 
   static {
     Random random = new Random(1);
@@ -28,26 +29,37 @@ public class WeightedLotteryNoRepetitionsBenchmark {
   }
 
   @Benchmark
-  public void loadTestSimpleWeightedLotteryNoRepetitions05() {
+  public void simple_with_threshold_05() {
     IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.5, ThreadLocalRandom::current);
-    for (int i = 0; i < 100; ++i) {
-      weightedLottery.draw();
-    }
+    draw(weightedLottery);
   }
 
   @Benchmark
-  public void loadTestSimpleWeightedLotteryNoRepetitions07() {
+  public void simple_with_threshold_06() {
+    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.6, ThreadLocalRandom::current);
+    draw(weightedLottery);
+  }
+
+  @Benchmark
+  public void simple_with_threshold_07() {
     IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.7, ThreadLocalRandom::current);
-    for (int i = 0; i < 100; ++i) {
-      weightedLottery.draw();
-    }
+    draw(weightedLottery);
   }
 
+  @Benchmark
+  public void simple_with_threshold_08() {
+    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.8, ThreadLocalRandom::current);
+    draw(weightedLottery);
+  }
 
   @Benchmark
-  public void loadTestSimpleWeightedLotteryNoRepetitions09() {
+  public void simple_with_threshold_09() {
     IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.9, ThreadLocalRandom::current);
-    for (int i = 0; i < 100; ++i) {
+    draw(weightedLottery);
+  }
+
+  private void draw(IntLottery weightedLottery) {
+    for (int i = 0; i < K; ++i) {
       weightedLottery.draw();
     }
   }

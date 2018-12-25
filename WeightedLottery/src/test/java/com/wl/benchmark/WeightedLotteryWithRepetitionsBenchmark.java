@@ -18,7 +18,8 @@ import java.util.concurrent.TimeUnit;
 //@Fork(1)
 public class WeightedLotteryWithRepetitionsBenchmark {
 
-  private static double[] weights = new double[800];
+  private static double[] weights = new double[1000];
+  private static int K = 50;
 
   static {
     Random random = new Random(1);
@@ -28,9 +29,13 @@ public class WeightedLotteryWithRepetitionsBenchmark {
   }
 
   @Benchmark
-  public void loadTestSimpleWeightedLottery() {
+  public void simple() {
     IntLottery weightedLottery = new SimpleIntWeightedLottery(5, weights, ThreadLocalRandom::current);
-    for (int i = 0; i < 100; ++i) {
+    draw(weightedLottery);
+  }
+
+  private void draw(IntLottery weightedLottery) {
+    for (int i = 0; i < K; ++i) {
       weightedLottery.draw();
     }
   }
