@@ -10,16 +10,15 @@ private val logger = KotlinLogging.logger {}
 class SimpleIntWeightedLottery(private val maxAttempts: Int = 5,
                                weights: DoubleArray,
                                private val random: () -> Random = { ThreadLocalRandom.current() }) : IntLottery {
+    private val accumulatedWeights = DoubleArray(weights.size)
 
-    private val accumulatedWeights = run {
-        var sum = 0.0
-        weights.map {
-            if (it.isNaN() || it < 0.0) {
-                throw IllegalArgumentException("$weights contains invalid weight: $it")
+    init {
+        weights.forEachIndexed { i, w ->
+            if (w.isNaN() || w < 0.0) {
+                throw IllegalArgumentException("$weights contains invalid weight: $w")
             }
-            sum += it
-            sum
-        }.toDoubleArray()
+            accumulatedWeights[i] = w + (if (i == 0) 0.0 else accumulatedWeights[i - 1])
+        }
     }
 
 
