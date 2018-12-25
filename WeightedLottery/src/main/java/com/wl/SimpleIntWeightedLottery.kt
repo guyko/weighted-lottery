@@ -30,10 +30,10 @@ class SimpleIntWeightedLottery(private val maxAttempts: Int = 5,
         val sumOfWeights = sumOfWeights()
         if (sumOfWeights == 0.0) {
             logger.warn { "All weights are zero. Draw one uniformly" }
-            return random().drawUniformly()
+            return drawUniformly()
         }
         for (i in 0 until maxAttempts) {
-            val key = random().nextDouble() * sumOfWeights()
+            val key = random().nextDouble() * sumOfWeights
             val pos = Arrays.binarySearch(accumulatedWeights, key)
             if (pos >= 0) {
                 //  the key was found. hitting on a boundary -- do another round. not likely to ever get here.
@@ -42,14 +42,12 @@ class SimpleIntWeightedLottery(private val maxAttempts: Int = 5,
             return -pos - 1
         }
         logger.warn { "Failed to draw by weights after $maxAttempts attempts. Drawing one uniformly. Sum of weights was: ${sumOfWeights()}, accumulated weights were: $accumulatedWeights" }
-
-        // draw uniformly
-        return random().drawUniformly()
+        return drawUniformly()
     }
 
     private fun sumOfWeights() = accumulatedWeights.last()
 
-    private fun Random.drawUniformly() = nextInt(accumulatedWeights.size)
+    private fun drawUniformly() = random().nextInt(accumulatedWeights.size)
 
     override fun empty() = remaining() == 0
 
