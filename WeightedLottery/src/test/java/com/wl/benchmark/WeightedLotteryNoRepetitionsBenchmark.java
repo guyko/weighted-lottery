@@ -13,6 +13,9 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
+//@Warmup(iterations = 1, time = 1)
+//@Measurement(iterations = 1)
+//@Fork(1)
 public class WeightedLotteryNoRepetitionsBenchmark {
 
   private static double[] weights = new double[800];
@@ -26,8 +29,7 @@ public class WeightedLotteryNoRepetitionsBenchmark {
 
   @Benchmark
   public void loadTestSimpleWeightedLotteryNoRepetitions05() {
-    Random current = ThreadLocalRandom.current();
-    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(current, 5, weights, 0.5);
+    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.5, ThreadLocalRandom::current);
     for (int i = 0; i < 100; ++i) {
       weightedLottery.draw();
     }
@@ -35,8 +37,7 @@ public class WeightedLotteryNoRepetitionsBenchmark {
 
   @Benchmark
   public void loadTestSimpleWeightedLotteryNoRepetitions07() {
-    Random current = ThreadLocalRandom.current();
-    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(current, 5, weights, 0.7);
+    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.7, ThreadLocalRandom::current);
     for (int i = 0; i < 100; ++i) {
       weightedLottery.draw();
     }
@@ -45,8 +46,7 @@ public class WeightedLotteryNoRepetitionsBenchmark {
 
   @Benchmark
   public void loadTestSimpleWeightedLotteryNoRepetitions09() {
-    Random current = ThreadLocalRandom.current();
-    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(current, 5, weights, 0.9);
+    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.9, ThreadLocalRandom::current);
     for (int i = 0; i < 100; ++i) {
       weightedLottery.draw();
     }

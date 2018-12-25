@@ -4,13 +4,13 @@ import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 import kotlin.NoSuchElementException
 
-class SimpleIntWeightedLotteryNoRepetitions(private val random: Random = ThreadLocalRandom.current(),
-                                            private val maxAttempts: Int = 5,
+class SimpleIntWeightedLotteryNoRepetitions(private val maxAttempts: Int = 5,
                                             private val weights: DoubleArray,
-                                            private val hitRatioThreshold: Double = 0.7) : IntLottery {
+                                            private val hitRatioThreshold: Double = 0.7,
+                                            private val random: () -> Random = { ThreadLocalRandom.current() }) : IntLottery {
 
     private var indexMapping = weights.mapIndexed { k, _ -> k }.toIntArray()
-    private var delegate = SimpleIntWeightedLottery(random, maxAttempts, weights)
+    private var delegate = SimpleIntWeightedLottery(maxAttempts, weights, random)
     private var selected = 0
     private val selectedArr = weights.map { 0 }.toIntArray()
     private var attempts = 0
@@ -43,7 +43,7 @@ class SimpleIntWeightedLotteryNoRepetitions(private val random: Random = ThreadL
 
 
             indexMapping = nonSelectedIndexMapping
-            delegate = SimpleIntWeightedLottery(random, maxAttempts, nonSelectedWeights)
+            delegate = SimpleIntWeightedLottery(maxAttempts, nonSelectedWeights, random)
             hits = 0
             attempts = 0
 

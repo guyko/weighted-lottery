@@ -13,6 +13,9 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
+//@Warmup(iterations = 1, time = 1)
+//@Measurement(iterations = 1)
+//@Fork(1)
 public class WeightedLotteryWithRepetitionsBenchmark {
 
   private static double[] weights = new double[800];
@@ -26,8 +29,7 @@ public class WeightedLotteryWithRepetitionsBenchmark {
 
   @Benchmark
   public void loadTestSimpleWeightedLottery() {
-    Random current = ThreadLocalRandom.current();
-    IntLottery weightedLottery = new SimpleIntWeightedLottery(current, 5, weights);
+    IntLottery weightedLottery = new SimpleIntWeightedLottery(5, weights, ThreadLocalRandom::current);
     for (int i = 0; i < 100; ++i) {
       weightedLottery.draw();
     }

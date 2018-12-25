@@ -10,24 +10,24 @@ import kotlin.test.assertTrue
 
 abstract class WeightedLotteryNoRepetitionsTestBase {
 
-    abstract fun weightedLottery(random: Random, weights: DoubleArray): IntLottery
+    abstract fun weightedLottery(weights: DoubleArray, random: () -> Random = { ThreadLocalRandom.current() }): IntLottery
 
     @Test
     fun `empty weights`() {
-        val weightedLottery = weightedLottery(random = ThreadLocalRandom.current(), weights = DoubleArray(0))
+        val weightedLottery = weightedLottery(weights = DoubleArray(0))
         assertNoMoreDraws(weightedLottery)
     }
 
     @Test
     fun `one draw for one element`() {
-        val weightedLottery = weightedLottery(random = ThreadLocalRandom.current(), weights = arrayOf(1.0).toDoubleArray())
+        val weightedLottery = weightedLottery(weights = arrayOf(1.0).toDoubleArray())
         assertEquals(0, weightedLottery.draw())
         assertNoMoreDraws(weightedLottery)
     }
 
     @Test
     fun `one draw for each element`() {
-        val weightedLottery = weightedLottery(random = ThreadLocalRandom.current(), weights = arrayOf(0.2, 0.5, 1.0, 1.0, 0.75).toDoubleArray())
+        val weightedLottery = weightedLottery(weights = arrayOf(0.2, 0.5, 1.0, 1.0, 0.75).toDoubleArray())
         val elements = (0 until 5).map { weightedLottery.draw() }.toSet()
         assertEquals((0 until 5).toSet(), elements)
         assertNoMoreDraws(weightedLottery)
@@ -35,7 +35,7 @@ abstract class WeightedLotteryNoRepetitionsTestBase {
 
     @Test
     fun `one draw for each element, with zero weights`() {
-        val weightedLottery = weightedLottery(random = ThreadLocalRandom.current(), weights = arrayOf(0.0, 0.5, 1.0, 0.0, 0.75).toDoubleArray())
+        val weightedLottery = weightedLottery(weights = arrayOf(0.0, 0.5, 1.0, 0.0, 0.75).toDoubleArray())
         val elements = (0 until 5).map { weightedLottery.draw() }.toSet()
         assertEquals((0 until 5).toSet(), elements)
         assertNoMoreDraws(weightedLottery)
@@ -48,7 +48,7 @@ abstract class WeightedLotteryNoRepetitionsTestBase {
         val counters = mutableMapOf<Int, Int>()
         val countersWhenFirstWas0_65 = mutableMapOf<Int, Int>()
         (0 until 100000).forEach { _ ->
-            val weightedLottery = weightedLottery(random = random, weights = arrayOf(0.15, 0.65, 0.2).toDoubleArray())
+            val weightedLottery = weightedLottery(weights = arrayOf(0.15, 0.65, 0.2).toDoubleArray()) { random }
             val i0 = weightedLottery.draw()
             counters[i0] = (counters[i0] ?: 0) + 1
             if (i0 == 1) {
@@ -71,7 +71,7 @@ abstract class WeightedLotteryNoRepetitionsTestBase {
         val counters = mutableMapOf<Int, Int>()
         val countersWhenFirstWas0_2 = mutableMapOf<Int, Int>()
         (0 until 100000).forEach { _ ->
-            val weightedLottery = weightedLottery(random = random, weights = arrayOf(0.15, 0.0, 0.2, 0.0, 0.65).toDoubleArray())
+            val weightedLottery = weightedLottery(weights = arrayOf(0.15, 0.0, 0.2, 0.0, 0.65).toDoubleArray()) { random }
             val i0 = weightedLottery.draw()
             counters[i0] = (counters[i0] ?: 0) + 1
             if (i0 == 2) {
@@ -91,8 +91,8 @@ abstract class WeightedLotteryNoRepetitionsTestBase {
 
     @Test
     fun `invalid input result in an exception`() {
-        assertFailsWith(IllegalArgumentException::class) { weightedLottery(random = Random(1), weights = arrayOf(-0.1, 0.1).toDoubleArray()) }
-        assertFailsWith(IllegalArgumentException::class) { weightedLottery(random = Random(1), weights = arrayOf(Double.NaN, 0.1).toDoubleArray()) }
+        assertFailsWith(IllegalArgumentException::class) { weightedLottery(weights = arrayOf(-0.1, 0.1).toDoubleArray()) { Random(1) } }
+        assertFailsWith(IllegalArgumentException::class) { weightedLottery(weights = arrayOf(Double.NaN, 0.1).toDoubleArray()) { Random(1) } }
     }
 
     private fun assertInRange(expected: Int, actual: Int, grace: Int) {
