@@ -35,7 +35,7 @@ class SimpleIntWeightedLotteryNoRepetitions(private val maxAttempts: Int = 5,
             val nonSelectedWeights = DoubleArray(remaining)
             val nonSelectedIndexMapping = IntArray(remaining)
             var idx = 0
-            (0 until weights.size).filter { !selected[it] }.forEach {
+            (0 until selected.size).asSequence().filter { !selected[it] }.forEach {
                 nonSelectedIndexMapping[idx] = it
                 nonSelectedWeights[idx] = weights[it]
                 ++idx
