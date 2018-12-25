@@ -1,11 +1,7 @@
 package com.wl
 
-import mu.KotlinLogging
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
-import kotlin.NoSuchElementException
-
-private val logger = KotlinLogging.logger {}
 
 class SimpleIntWeightedLottery(private val maxAttempts: Int = 5,
                                weights: DoubleArray,
@@ -23,12 +19,8 @@ class SimpleIntWeightedLottery(private val maxAttempts: Int = 5,
 
 
     override fun draw(): Int {
-        if (accumulatedWeights.isEmpty()) {
-            throw NoSuchElementException()
-        }
-        val sumOfWeights = sumOfWeights()
+        val sumOfWeights = accumulatedWeights.last()
         if (sumOfWeights == 0.0) {
-            logger.warn { "All weights are zero. Draw one uniformly" }
             return drawUniformly()
         }
         for (i in 0 until maxAttempts) {
@@ -40,11 +32,8 @@ class SimpleIntWeightedLottery(private val maxAttempts: Int = 5,
             }
             return -pos - 1
         }
-        logger.warn { "Failed to draw by weights after $maxAttempts attempts. Drawing one uniformly. Sum of weights was: ${sumOfWeights()}, accumulated weights were: $accumulatedWeights" }
         return drawUniformly()
     }
-
-    private fun sumOfWeights() = accumulatedWeights.last()
 
     private fun drawUniformly() = random().nextInt(accumulatedWeights.size)
 
