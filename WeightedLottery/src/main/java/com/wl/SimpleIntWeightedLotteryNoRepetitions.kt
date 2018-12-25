@@ -11,31 +11,29 @@ class SimpleIntWeightedLotteryNoRepetitions(private val maxAttempts: Int = 5,
 
     private var indexMapping = weights.mapIndexed { k, _ -> k }.toIntArray()
     private var delegate = SimpleIntWeightedLottery(maxAttempts, weights, random)
-    private var selected = 0
-    private val selectedArr = weights.map { 0 }.toIntArray()
+    private val selected = BitSet(weights.size)
     private var attempts = 0
     private var hits = 0
 
     override fun draw(): Int {
         attempts++
         val item = indexMapping[delegate.draw()]
-        if (selectedArr[item] == 0) {
-            selected++
+        if (!selected[item]) {
             hits++
-            selectedArr[item] = 1
+            selected.flip(item)
             return item
         }
         if (hits.toDouble() / attempts < hitRatioThreshold) {
             // hit ratio dropped. better to reallocate the delegate
 
-            val nonSelectedItems = selectedArr.filter { it == 0 }.size
-            if (nonSelectedItems == 0) {
+            val remaining = remaining()
+            if (remaining == 0) {
                 throw NoSuchElementException()
             }
-            val nonSelectedWeights = DoubleArray(nonSelectedItems)
-            val nonSelectedIndexMapping = IntArray(nonSelectedItems)
+            val nonSelectedWeights = DoubleArray(remaining)
+            val nonSelectedIndexMapping = IntArray(remaining)
             var idx = 0
-            (0 until selectedArr.size).filter { selectedArr[it] == 0 }.forEach {
+            (0 until weights.size).filter { !selected[it] }.forEach {
                 nonSelectedIndexMapping[idx] = it
                 nonSelectedWeights[idx] = weights[it]
                 ++idx
@@ -53,5 +51,5 @@ class SimpleIntWeightedLotteryNoRepetitions(private val maxAttempts: Int = 5,
 
     override fun empty() = remaining() == 0
 
-    override fun remaining() = selectedArr.size - selected
+    override fun remaining() = weights.size - selected.cardinality()
 }
