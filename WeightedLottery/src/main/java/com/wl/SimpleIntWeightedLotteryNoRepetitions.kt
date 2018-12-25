@@ -11,7 +11,8 @@ class SimpleIntWeightedLotteryNoRepetitions(private val maxAttempts: Int = 5,
 
     private var indexMapping = weights.mapIndexed { k, _ -> k }.toIntArray()
     private var delegate = SimpleIntWeightedLottery(maxAttempts, weights, random)
-    private val selected = BitSet(weights.size)
+    private val selected = BooleanArray(weights.size)
+    private var remaining = weights.size
     private var attempts = 0
     private var hits = 0
 
@@ -20,7 +21,8 @@ class SimpleIntWeightedLotteryNoRepetitions(private val maxAttempts: Int = 5,
         val item = indexMapping[delegate.draw()]
         if (!selected[item]) {
             hits++
-            selected.flip(item)
+            selected[item] = true
+            remaining--
             return item
         }
         if (hits.toDouble() / attempts < hitRatioThreshold) {
@@ -51,5 +53,5 @@ class SimpleIntWeightedLotteryNoRepetitions(private val maxAttempts: Int = 5,
 
     override fun empty() = remaining() == 0
 
-    override fun remaining() = weights.size - selected.cardinality()
+    override fun remaining() = remaining
 }
