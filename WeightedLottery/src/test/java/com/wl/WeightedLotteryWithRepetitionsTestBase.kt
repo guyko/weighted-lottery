@@ -22,7 +22,7 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
 
     @Test
     fun `one element draw over and over`() {
-        val weightedLottery = weightedLottery(weights = arrayOf(1.0).toDoubleArray())
+        val weightedLottery = weightedLottery(weights = doubleArrayOf(1.0))
         assertEquals(0, weightedLottery.draw())
         assertEquals(0, weightedLottery.draw())
         assertEquals(0, weightedLottery.draw())
@@ -33,7 +33,7 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
     @Test
     fun `100000 draws yield ~ given distribution`() {
         val random = Random(1)
-        val weightedLottery = weightedLottery(weights = arrayOf(0.15, 0.65, 0.2).toDoubleArray()) { random }
+        val weightedLottery = weightedLottery(weights = doubleArrayOf(0.15, 0.65, 0.2)) { random }
         val counters = mutableMapOf<Int, Int>()
         (0 until 100000).forEach { _ ->
             val idx = weightedLottery.draw()
@@ -49,7 +49,7 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
     @Test
     fun `100000 draws yield ~ given distribution when some weights are 0`() {
         val random = Random(1)
-        val weightedLottery = weightedLottery(weights = arrayOf(0.15, 0.0, 0.2, 0.0, 0.65).toDoubleArray()) { random }
+        val weightedLottery = weightedLottery(weights = doubleArrayOf(0.15, 0.0, 0.2, 0.0, 0.65)) { random }
         val counters = mutableMapOf<Int, Int>()
         (0 until 100000).forEach { _ ->
             val idx = weightedLottery.draw()
@@ -67,7 +67,7 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
     @Test
     fun `100000 draws yield ~ even distribution when all weights are 0`() {
         val random = Random(1)
-        val weightedLottery = weightedLottery(weights = arrayOf(0.0, 0.0, 0.0, 0.0).toDoubleArray()) { random }
+        val weightedLottery = weightedLottery(weights = doubleArrayOf(0.0, 0.0, 0.0, 0.0)) { random }
         val counters = mutableMapOf<Int, Int>()
         (0 until 100000).forEach { _ ->
             val idx = weightedLottery.draw()
@@ -83,8 +83,8 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
 
     @Test
     fun `invalid input result in an exception`() {
-        assertFailsWith(IllegalArgumentException::class) { weightedLottery(weights = arrayOf(-0.1, 0.1).toDoubleArray()) { Random(1) } }
-        assertFailsWith(IllegalArgumentException::class) { weightedLottery(weights = arrayOf(Double.NaN, 0.1).toDoubleArray()) { Random(1) } }
+        assertFailsWith(IllegalArgumentException::class) { weightedLottery(weights = doubleArrayOf(-0.1, 0.1)) { Random(1) } }
+        assertFailsWith(IllegalArgumentException::class) { weightedLottery(weights = doubleArrayOf(Double.NaN, 0.1)) { Random(1) } }
     }
 
     private fun assertInRange(expected: Int, actual: Int, grace: Int) {
