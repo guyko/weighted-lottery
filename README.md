@@ -10,9 +10,9 @@ val lottery = SimpleWeightedLottery(weights)
   val index = lottery.draw()
   // do something
 }
-```Kotlin
-Using a weighted lottery implementation, without repetitions - you can potentially drain the items to draw:
 ```
+Using a weighted lottery implementation, without repetitions - you can potentially drain the items to draw:
+```Kotlin
 val weights = doubleArrayOf(0.15, 0.0, 0.2, 0.0, 0.65)
 val lottery = SimpleWeightedLotteryNoRepetitions(weights)
 while(lottery.remaining() > 0) {
