@@ -18,19 +18,28 @@ import java.util.concurrent.TimeUnit;
 //@Fork(1)
 public class WeightedLotteryWithRepetitionsBenchmark {
 
-  private static double[] weights = new double[1000];
-  private static int K = 100;
+  private static double[] randomWeights = new double[10000];
+  private static double[] powerDistributionWeights = new double[10000];
+  private static int K = 500;
 
   static {
     Random random = new Random(1);
-    for (int i = 0; i < weights.length; ++i) {
-      weights[i] = random.nextDouble();
+    for (int i = 0; i < randomWeights.length; ++i) {
+      randomWeights[i] = random.nextDouble();
+      powerDistributionWeights[i] = i == 0 ? 0.5 : powerDistributionWeights[i] / 2;
     }
   }
 
+
   @Benchmark
-  public void simple() {
-    IntLottery weightedLottery = new SimpleIntWeightedLottery(5, weights, ThreadLocalRandom::current);
+  public void simple_random_dist() {
+    IntLottery weightedLottery = new SimpleIntWeightedLottery(5, randomWeights, ThreadLocalRandom::current);
+    draw(weightedLottery);
+  }
+
+  @Benchmark
+  public void simple_power_dist() {
+    IntLottery weightedLottery = new SimpleIntWeightedLottery(5, powerDistributionWeights, ThreadLocalRandom::current);
     draw(weightedLottery);
   }
 

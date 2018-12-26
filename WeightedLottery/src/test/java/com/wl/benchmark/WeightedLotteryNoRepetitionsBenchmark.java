@@ -23,43 +23,52 @@ import java.util.concurrent.TimeUnit;
 //@Fork(1)
 public class WeightedLotteryNoRepetitionsBenchmark {
 
-  private static double[] weights = new double[1000];
-  private static int K = 100;
+  private static double[] randomWeights = new double[10000];
+  private static double[] powerDistributionWeights = new double[10000];
+  private static int K = 500;
 
   static {
     Random random = new Random(1);
-    for (int i = 0; i < weights.length; ++i) {
-      weights[i] = random.nextDouble();
+    for (int i = 0; i < randomWeights.length; ++i) {
+      randomWeights[i] = random.nextDouble();
+      powerDistributionWeights[i] = i == 0 ? 0.5 : powerDistributionWeights[i] / 2;
     }
   }
 
+
   @Benchmark
-  public void simple_with_threshold_05() {
-    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.5, ThreadLocalRandom::current);
+  public void simple_05_random_dist() {
+    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, randomWeights, 0.5, ThreadLocalRandom::current);
     draw(weightedLottery);
   }
 
   @Benchmark
-  public void simple_with_threshold_06() {
-    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.6, ThreadLocalRandom::current);
+  public void simple_07_random_dist() {
+    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, randomWeights, 0.7, ThreadLocalRandom::current);
     draw(weightedLottery);
   }
 
   @Benchmark
-  public void simple_with_threshold_07() {
-    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.7, ThreadLocalRandom::current);
+  public void simple_09_random_dist() {
+    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, randomWeights, 0.9, ThreadLocalRandom::current);
     draw(weightedLottery);
   }
 
   @Benchmark
-  public void simple_with_threshold_08() {
-    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.8, ThreadLocalRandom::current);
+  public void simple_05_power_dist() {
+    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, powerDistributionWeights, 0.5, ThreadLocalRandom::current);
     draw(weightedLottery);
   }
 
   @Benchmark
-  public void simple_with_threshold_09() {
-    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.9, ThreadLocalRandom::current);
+  public void simple_07_power_dist() {
+    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, powerDistributionWeights, 0.7, ThreadLocalRandom::current);
+    draw(weightedLottery);
+  }
+
+  @Benchmark
+  public void simple_09_power_dist() {
+    IntLottery weightedLottery = new SimpleIntWeightedLotteryNoRepetitions(5, powerDistributionWeights, 0.9, ThreadLocalRandom::current);
     draw(weightedLottery);
   }
 
