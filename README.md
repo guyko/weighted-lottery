@@ -23,7 +23,7 @@ while(lottery.remaining() > 0) {
 }
 ```
 
-All implementations are benchmarked using JMH, and can be found [here](https://api.travis-ci.org/guyko/weighted-lottery/jmh-result.json)
+All implementations are benchmarked using JMH, and can be found [here](https://github.com/guyko/weighted-lottery/jmh-result.json)
 
 The following visualization is taken from using http://jmh.morethan.io/ with the latest benchmark:
 
