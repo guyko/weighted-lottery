@@ -27,5 +27,5 @@ All implementations are benchmarked using JMH, and can be found [here](https://g
 
 The following visualization is taken from using http://jmh.morethan.io/ with the latest benchmark:
 
-![Alt text](/benchmark.png "Benchmark")
+<iframe src="http://jmh.morethan.io/?source=https://raw.githubusercontent.com/guyko/weighted-lottery/master/jmh-result.json" width="100%" height="600"></iframe>
 
