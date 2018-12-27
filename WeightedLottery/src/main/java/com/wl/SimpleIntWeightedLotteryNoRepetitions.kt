@@ -14,7 +14,7 @@ class SimpleIntWeightedLotteryNoRepetitions(private val maxAttempts: Int = 5,
     private val selected = BooleanArray(weights.size)
     private var remaining = weights.size
     private var attempts = 0
-    private var hits = 0
+    private var hits = 0.0
 
     override fun draw(): Int {
         attempts++
@@ -25,7 +25,7 @@ class SimpleIntWeightedLotteryNoRepetitions(private val maxAttempts: Int = 5,
             remaining--
             return item
         }
-        if (hits.toDouble() / attempts < hitRatioThreshold) {
+        if (hits / attempts < hitRatioThreshold) {
             // hit ratio dropped. better to reallocate the delegate
 
             val remaining = remaining()
@@ -44,7 +44,7 @@ class SimpleIntWeightedLotteryNoRepetitions(private val maxAttempts: Int = 5,
 
             indexMapping = nonSelectedIndexMapping
             delegate = SimpleIntWeightedLottery(maxAttempts, nonSelectedWeights, random)
-            hits = 0
+            hits = 0.0
             attempts = 0
 
         }
