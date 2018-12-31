@@ -25,7 +25,7 @@ while(lottery.remaining() > 0) {
 
 All implementations are benchmarked using JMH, and can be found [here](https://jmh.morethan.io/?source=https://raw.githubusercontent.com/guyko/weighted-lottery/master/jmh-result.json)
 
-The following visualization is taken from using http://jmh.morethan.io/ with the latest benchmark:
+The benchmark visualization is done with http://jmh.morethan.io/ 
 
 <iframe src="https://jmh.morethan.io/?source=https://raw.githubusercontent.com/guyko/weighted-lottery/master/jmh-result.json" width="100%" height="1000" frameBorder="0"></iframe>
 
