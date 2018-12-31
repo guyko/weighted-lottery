@@ -13,18 +13,21 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class ManySamplesNoRepetitionsPowerDistBenchmark {
 
+  private static WeightedLotteryBenchmark benchmark = WeightedLotteryBenchmark.INSTANCE;
+  private static final double[] weights = benchmark.getPowerWeights();
+
   @Benchmark
   public void simple_05() {
-    WeightedLotteryBenchmark.INSTANCE.mTimesDrawKTimes(false, weights -> new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.5, ThreadLocalRandom::current));
+    benchmark.mTimesDrawKTimes(() -> new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.5, ThreadLocalRandom::current));
   }
 
   @Benchmark
   public void simple_07() {
-    WeightedLotteryBenchmark.INSTANCE.mTimesDrawKTimes(false, weights -> new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.7, ThreadLocalRandom::current));
+    benchmark.mTimesDrawKTimes(() -> new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.7, ThreadLocalRandom::current));
   }
 
   @Benchmark
   public void simple_09() {
-    WeightedLotteryBenchmark.INSTANCE.mTimesDrawKTimes(false, weights -> new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.9, ThreadLocalRandom::current));
+    benchmark.mTimesDrawKTimes(() -> new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.9, ThreadLocalRandom::current));
   }
 }

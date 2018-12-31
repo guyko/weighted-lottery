@@ -13,9 +13,10 @@ import java.util.concurrent.TimeUnit;
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class OneSampleWithRepetitionsRandomDistBenchmark {
 
+  private static WeightedLotteryBenchmark benchmark = WeightedLotteryBenchmark.INSTANCE;
 
   @Benchmark
   public void simple() {
-    WeightedLotteryBenchmark.INSTANCE.drawKTimes(true, weights -> new SimpleIntWeightedLottery(5, weights, ThreadLocalRandom::current));
+    benchmark.drawKTimes(new SimpleIntWeightedLottery(5, benchmark.getRandomWeights(), ThreadLocalRandom::current));
   }
 }

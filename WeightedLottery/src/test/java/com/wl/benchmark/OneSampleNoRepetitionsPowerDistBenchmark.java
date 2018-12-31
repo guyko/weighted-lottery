@@ -12,18 +12,21 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 public class OneSampleNoRepetitionsPowerDistBenchmark {
+  private static WeightedLotteryBenchmark benchmark = WeightedLotteryBenchmark.INSTANCE;
+  private static final double[] weights = benchmark.getPowerWeights();
+
   @Benchmark
   public void simple_05() {
-    WeightedLotteryBenchmark.INSTANCE.drawKTimes(false, weights -> new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.5, ThreadLocalRandom::current));
+    benchmark.drawKTimes(new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.5, ThreadLocalRandom::current));
   }
 
   @Benchmark
   public void simple_07() {
-    WeightedLotteryBenchmark.INSTANCE.drawKTimes(false, weights -> new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.7, ThreadLocalRandom::current));
+    benchmark.drawKTimes(new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.7, ThreadLocalRandom::current));
   }
 
   @Benchmark
   public void simple_09() {
-    WeightedLotteryBenchmark.INSTANCE.drawKTimes(false, weights -> new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.9, ThreadLocalRandom::current));
+    benchmark.drawKTimes(new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.9, ThreadLocalRandom::current));
   }
 }

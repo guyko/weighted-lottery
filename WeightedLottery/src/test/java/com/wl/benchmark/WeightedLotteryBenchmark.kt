@@ -14,17 +14,15 @@ object WeightedLotteryBenchmark {
     private val M = 500
 
     private val random = Random(1)
-    private val randomWeights = (0 until N).map { random.nextDouble() }.toDoubleArray()
-    private val powerWeights = (1..N).map { Math.pow(0.5, it.toDouble()) }.toDoubleArray()
+    val randomWeights = (0 until N).map { random.nextDouble() }.toDoubleArray()
+    val powerWeights = (1..N).map { Math.pow(0.5, it.toDouble()) }.toDoubleArray()
 
 
-    fun mTimesDrawKTimes(randomDistribution: Boolean, weightedLotteryF: (weights: DoubleArray) -> IntLottery) {
-        (0 until M).forEach { _ -> drawKTimes(randomDistribution, weightedLotteryF) }
+    fun mTimesDrawKTimes(weightedLottery: () -> IntLottery) {
+        (0 until M).forEach { _ -> drawKTimes(weightedLottery()) }
     }
 
-    fun drawKTimes(randomDistribution: Boolean, weightedLotteryF: (weights: DoubleArray) -> IntLottery) {
-        val weights = if (randomDistribution) randomWeights else powerWeights
-        val weightedLottery = weightedLotteryF(weights)
+    fun drawKTimes(weightedLottery: IntLottery) {
         (0 until K).forEach { _ -> weightedLottery.draw() }
     }
 }
