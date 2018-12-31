@@ -17,6 +17,6 @@ public class OneSampleWithRepetitionsPowerDistBenchmark {
 
   @Benchmark
   public void simple() {
-    benchmark.drawKTimes(new SimpleIntWeightedLottery(5, benchmark.getPowerWeights(), ThreadLocalRandom::current));
+    benchmark.drawKTimes(new SimpleIntWeightedLottery(benchmark.getPowerWeights(), ThreadLocalRandom::current));
   }
 }

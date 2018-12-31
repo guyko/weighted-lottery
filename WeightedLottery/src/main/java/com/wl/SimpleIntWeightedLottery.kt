@@ -3,17 +3,16 @@ package com.wl
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
-class SimpleIntWeightedLottery(private val maxAttempts: Int = 5,
-                               weights: DoubleArray,
+class SimpleIntWeightedLottery(private val weights: DoubleArray,
                                private val random: () -> Random = { ThreadLocalRandom.current() }) : IntLottery {
     private val accumulatedWeights = DoubleArray(weights.size)
 
     init {
-        weights.forEachIndexed { i, w ->
-            if (w.isNaN() || w < 0.0) {
-                throw IllegalArgumentException("$weights contains invalid weight: $w")
+        if (weights.isNotEmpty()) {
+            accumulatedWeights[0] = weights[0].validate()
+            (1 until weights.size).forEach {
+                accumulatedWeights[it] = weights[it].validate() + accumulatedWeights[it - 1]
             }
-            accumulatedWeights[i] = w + (if (i == 0) 0.0 else accumulatedWeights[i - 1])
         }
     }
 
@@ -23,16 +22,19 @@ class SimpleIntWeightedLottery(private val maxAttempts: Int = 5,
         if (sumOfWeights == 0.0) {
             return drawUniformly()
         }
-        for (i in 0 until maxAttempts) {
-            val key = random().nextDouble() * sumOfWeights
-            val pos = Arrays.binarySearch(accumulatedWeights, key)
-            if (pos >= 0) {
-                //  the key was found. hitting on a boundary -- do another round. not likely to ever get here.
-                continue
-            }
-            return -pos - 1
+        val key = random().nextDouble() * sumOfWeights
+        val pos = Arrays.binarySearch(accumulatedWeights, key)
+        return when {
+            pos < 0 -> -pos - 1
+            else -> pos
         }
-        return drawUniformly()
+    }
+
+    private fun Double.validate(): Double {
+        if (isNaN() || this < 0.0) {
+            throw IllegalArgumentException("$weights contains invalid weight: $this")
+        }
+        return this
     }
 
     private fun drawUniformly() = random().nextInt(accumulatedWeights.size)

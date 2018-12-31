@@ -17,7 +17,7 @@ public class ManySamplesWithRepetitionsRandomDistBenchmark {
 
   @Benchmark
   public void simple() {
-    SimpleIntWeightedLottery lottery = new SimpleIntWeightedLottery(5, benchmark.getRandomWeights(), ThreadLocalRandom::current);
+    SimpleIntWeightedLottery lottery = new SimpleIntWeightedLottery(benchmark.getRandomWeights(), ThreadLocalRandom::current);
     benchmark.mTimesDrawKTimes(() -> lottery);
   }
 }

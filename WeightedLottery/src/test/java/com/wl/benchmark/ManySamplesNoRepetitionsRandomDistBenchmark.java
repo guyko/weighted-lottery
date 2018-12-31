@@ -18,16 +18,16 @@ public class ManySamplesNoRepetitionsRandomDistBenchmark {
 
   @Benchmark
   public void simple_05() {
-    benchmark.mTimesDrawKTimes(() -> new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.5, ThreadLocalRandom::current));
+    benchmark.mTimesDrawKTimes(() -> new SimpleIntWeightedLotteryNoRepetitions(weights, 0.5, ThreadLocalRandom::current));
   }
 
   @Benchmark
   public void simple_07() {
-    benchmark.mTimesDrawKTimes(() -> new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.7, ThreadLocalRandom::current));
+    benchmark.mTimesDrawKTimes(() -> new SimpleIntWeightedLotteryNoRepetitions(weights, 0.7, ThreadLocalRandom::current));
   }
 
   @Benchmark
   public void simple_09() {
-    benchmark.mTimesDrawKTimes(() -> new SimpleIntWeightedLotteryNoRepetitions(5, weights, 0.9, ThreadLocalRandom::current));
+    benchmark.mTimesDrawKTimes(() -> new SimpleIntWeightedLotteryNoRepetitions(weights, 0.9, ThreadLocalRandom::current));
   }
 }
