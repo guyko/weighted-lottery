@@ -22,6 +22,7 @@ while(lottery.remaining() > 0) {
   // do something
 }
 ```
+For more details on weighted-lottory, follow the [wiki page](https://github.com/guyko/weighted-lottery/wiki)
 
 All implementations are benchmarked using JMH, and can be found [here](https://jmh.morethan.io/?source=https://raw.githubusercontent.com/guyko/weighted-lottery/master/jmh-result.json)
 
