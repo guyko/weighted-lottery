@@ -13,8 +13,8 @@ public class OneSampleWithRepetitionsRandomDistBenchmark {
 
   @Benchmark
   public void simple() {
-    double[] randomWeights = benchmark.getRandomWeights();
-    benchmark.drawKTimes(new SimpleIntWeightedLottery(randomWeights, ThreadLocalRandom::current));
+    double[] weights = benchmark.getRandomWeights();
+    benchmark.drawKTimes(new SimpleIntWeightedLottery(weights, ThreadLocalRandom::current));
   }
 }
 ```
@@ -24,5 +24,10 @@ The _'simple'_ method uses the _WeightedLotteryBenchmark_ utility to obtain rand
 
 ### Use cases
 * _'with repetitions'_ vs _'without repetitions'_
+
 * one sample of k items vs many samples of k items (some implementations may be better when reusing the same weights)
 * uniform vs exponential distribution _(0.5, 0.25, 0.125, .....)_ of probabilities
+```Java
+double[] weights = benchmark.getPowerWeights(); // [0.5, 0.25, 0.125, ...]
+benchmark.drawKTimes(new SimpleIntWeightedLottery(weights, ThreadLocalRandom::current));
+```
