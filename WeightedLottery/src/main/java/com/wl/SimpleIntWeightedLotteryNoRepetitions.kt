@@ -7,7 +7,7 @@ class SimpleIntWeightedLotteryNoRepetitions(private val weights: DoubleArray,
                                             private val hitRatioThreshold: Double = 0.7,
                                             private val random: () -> Random = { ThreadLocalRandom.current() }) : IntLottery {
 
-    private var indexMapping = IntArray(weights.size) { i -> i }
+    private var indexMapping = IntArray(weights.size) { it }
     private var delegate = SimpleIntWeightedLottery(weights, random)
     private val selected = BooleanArray(weights.size)
     private var remaining = weights.size
