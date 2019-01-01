@@ -34,12 +34,9 @@ Saperated benchmark classes for the two types of implementations
 Some implementations may be better when reusing the same state when weights are the same.  Using _'mTimesDrawKTimes'_ with a lambda, makes it possible to keep that state and reuse it (in this case, the state is the lottery instance)
 
 ```Java
-@Benchmark
-public void simple() {
-  double[] weights = benchmark.getRandomWeights();
-  SimpleIntWeightedLottery lottery = new SimpleIntWeightedLottery(weights, ThreadLocalRandom::current);
-  benchmark.mTimesDrawKTimes(() -> lottery);
-}
+double[] weights = benchmark.getRandomWeights();
+SimpleIntWeightedLottery lottery = new SimpleIntWeightedLottery(weights, ThreadLocalRandom::current);
+benchmark.mTimesDrawKTimes(() -> lottery);
 ```
 
 ### Uniform vs exponential distribution of probabilities 
