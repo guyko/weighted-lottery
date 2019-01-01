@@ -2,7 +2,6 @@ package com.wl
 
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
-import kotlin.NoSuchElementException
 
 class SimpleIntWeightedLotteryNoRepetitions(private val weights: DoubleArray,
                                             private val hitRatioThreshold: Double = 0.7,
@@ -32,7 +31,6 @@ class SimpleIntWeightedLotteryNoRepetitions(private val weights: DoubleArray,
     }
 
     private fun reallocate() {
-        val remaining = remaining()
         if (remaining == 0) {
             throw NoSuchElementException()
         }
