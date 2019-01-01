@@ -21,10 +21,12 @@ public class OneSampleWithRepetitionsRandomDistBenchmark {
 The _'simple'_ method uses the _WeightedLotteryBenchmark_ utility to obtain random weights, and to draw k times by calling _'drawKTimes'_. 
 
 
-### Use cases
-* _'with repetitions'_ vs _'without repetitions'_. Saperated benchmark classes for the two types of implementations
+## Use cases
+### _'with repetitions'_ vs _'without repetitions'_ 
+Saperated benchmark classes for the two types of implementations
 
-* one sample of k items vs many samples of k items (some implementations may be better when reusing the same state when weights are the same).  Using _'mTimesDrawKTimes'_ with a function returing a lottery allows to keep that state and reuse it (in this case, the state is the lottery instance)
+### One sample of k items vs many samples of k items
+Some implementations may be better when reusing the same state when weights are the same.  Using _'mTimesDrawKTimes'_ with a lambda, makes it possible to keep that state and reuse it (in this case, the state is the lottery instance)
 
 ```Java
 @Benchmark
@@ -35,7 +37,8 @@ public void simple() {
 }
 ```
 
-* uniform vs exponential distribution of probabilities. Using _WeightedLotteryBenchmark_ utility, one can obtain both random and exponential weights
+### Uniform vs exponential distribution of probabilities 
+Using _WeightedLotteryBenchmark_ utility, one can obtain both random and exponential weights
 
 ```Java
 double[] weights = benchmark.getPowerWeights(); // [0.5, 0.25, 0.125, ...]
