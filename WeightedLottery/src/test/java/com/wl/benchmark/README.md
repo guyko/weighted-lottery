@@ -3,10 +3,9 @@
 All implementations are benchmarked using [jmh](http://tutorials.jenkov.com/java-performance/jmh.html), with gc profiler enabled
 The interesting metric is the average time for performing either one sample (draw k from n), or many samples (m times draw k from n). In addition, we measure gc metrics like allocation rate and gc count and duration
 
-![alt text](https://github.com/guyko/weighted-lottery/blob/master/benchmark.jpg)
-
 Latest benchmark result can be found [here](https://jmh.morethan.io/?source=https://raw.githubusercontent.com/guyko/weighted-lottery/master/jmh-result.json)
 
+![alt text](https://github.com/guyko/weighted-lottery/blob/master/benchmark.jpg)
 
 A typical benchmark class will look like this:
 
