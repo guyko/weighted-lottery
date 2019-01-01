@@ -2,6 +2,8 @@
 
 All implementations are benchmarked using [jmh](http://tutorials.jenkov.com/java-performance/jmh.html), with gc profiler enabled
 
+Latest benchmark result can be found [here](https://jmh.morethan.io/?source=https://raw.githubusercontent.com/guyko/weighted-lottery/master/jmh-result.json)
+
 A typical benchmark will look like this:
 
 ```Java
@@ -62,7 +64,8 @@ Otherwise, you should add it to:
 
 ### How do I execute the benchmark on my machine ?
 The main method of _WeightedLotteryBenchmark_ executes all 8 classes, and prints the outcome to jmh-result.json (note that it may take few hours to finish).
+
 You can visualize the outcome by uploading the file to http://jmh.morethan.io/
 
-You can install [JMH IntelliJ plugin](https://plugins.jetbrains.com/plugin/7529-jmh-plugin) and use it to run a single benchmark class, by right clicking it
+Another option is to install [JMH IntelliJ plugin](https://plugins.jetbrains.com/plugin/7529-jmh-plugin) and use it to run a single benchmark class by right clicking the class -> Run
 
