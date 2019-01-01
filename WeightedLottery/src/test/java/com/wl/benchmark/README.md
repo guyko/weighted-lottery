@@ -5,7 +5,9 @@ The interesting metric is the average time for performing either one sample (dra
 
 Latest benchmark result can be found [here](https://jmh.morethan.io/?source=https://raw.githubusercontent.com/guyko/weighted-lottery/master/jmh-result.json)
 
-A typical benchmark will look like this:
+![alt text](https://github.com/guyko/weighted-lottery/blob/master/benchmark.jpg)
+
+A typical benchmark class will look like this:
 
 ```Java
 @BenchmarkMode(Mode.AverageTime)
