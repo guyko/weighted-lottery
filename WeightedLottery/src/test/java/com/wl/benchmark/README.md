@@ -44,3 +44,19 @@ Using _WeightedLotteryBenchmark_ utility, one can obtain both random and exponen
 double[] weights = benchmark.getPowerWeights(); // [0.5, 0.25, 0.125, ...]
 benchmark.drawKTimes(new SimpleIntWeightedLottery(weights, ThreadLocalRandom::current));
 ```
+## FAQ
+### I wrote a new lottery class, which benchmark should I add it to ?
+If your class supports repetitions, you should add a method to the following classes: 
+
+* _OneSamplesWithRepetitionsRandomDistBenchmark_
+* _OneSamplesWithRepetitionsPowerDistBenchmark_
+* _ManySamplesWithRepetitionsRandomDistBenchmark_
+* _ManySamplesWithRepetitionsPowerDistBenchmark_
+
+Otherwise, you should add it to:
+
+* _OneSamplesNoRepetitionsRandomDistBenchmark_
+* _OneSamplesNoRepetitionsPowerDistBenchmark_
+* _ManySamplesNoRepetitionsRandomDistBenchmark_
+* _ManySamplesNoRepetitionsPowerDistBenchmark_
+
