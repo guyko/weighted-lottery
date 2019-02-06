@@ -26,7 +26,6 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
         assertEquals(0, weightedLottery.draw())
         assertEquals(0, weightedLottery.draw())
         assertEquals(0, weightedLottery.draw())
-        assertEquals(1, weightedLottery.remaining())
         assertFalse(weightedLottery.empty())
     }
 
@@ -42,7 +41,6 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
         assertInRange(15000, counters[0]!!, 200)   // binomial distribution
         assertInRange(65000, counters[1]!!, 200)
         assertInRange(20000, counters[2]!!, 200)
-        assertEquals(3, weightedLottery.remaining())
         assertFalse(weightedLottery.empty())
     }
 
@@ -60,7 +58,6 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
         assertInRange(65000, counters[4]!!, 200)
         assertEquals(0, counters[1] ?: 0, "$counters doesn't match weights")
         assertEquals(0, counters[3] ?: 0, "$counters doesn't match weights")
-        assertEquals(5, weightedLottery.remaining())
         assertFalse(weightedLottery.empty())
     }
 
@@ -76,8 +73,7 @@ abstract class WeightedLotteryWithRepetitionsTestBase {
         (0 until 4).forEach {
             assertInRange(25000, counters[it]!!, 250)
         }
-
-        assertEquals(4, weightedLottery.remaining())
+        
         assertFalse(weightedLottery.empty())
     }
 
