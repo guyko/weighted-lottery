@@ -3,11 +3,14 @@ package com.wl
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
+const val ONE = 1.000000
+const val ZERO = 0.0
+
 class AliasLottery(
     private val weights: DoubleArray,
     private val random: () -> Random = { ThreadLocalRandom.current() }
 ) : IntLottery {
-    private val probabilities = DoubleArray(weights.size) { 1.0 }
+    private val probabilities = DoubleArray(weights.size) { ONE }
     private val aliases = IntArray(weights.size) { random().nextInt(weights.size) }
 
     init {
@@ -23,14 +26,16 @@ class AliasLottery(
         for (item in itemsWithIndex) {
             putItemInCorrectBag(item, bigger, smaller)
         }
-        while (smaller.isNotEmpty()) {
+        while (smaller.isNotEmpty() && bigger.isNotEmpty()) {
             val pickSmaller = smaller.removeAt(0)
             val pickBigger = bigger.removeAt(0)
-            val delta = pickBigger.value - (1.0 - pickSmaller.value)
+            val delta = pickBigger.value - (ONE - pickSmaller.value)
             probabilities[pickSmaller.index] = pickSmaller.value
             aliases[pickSmaller.index] = pickBigger.index
             putItemInCorrectBag(IndexedValue(pickBigger.index, delta), bigger, smaller)
         }
+        smaller.forEach { putItemInCorrectBag(IndexedValue(it.index, ONE), bigger, smaller) }
+        bigger.forEach { putItemInCorrectBag(IndexedValue(it.index, ONE), bigger, smaller) }
     }
 
     private fun putItemInCorrectBag(
@@ -38,10 +43,11 @@ class AliasLottery(
         bigger: MutableList<IndexedValue<Double>>,
         smaller: MutableList<IndexedValue<Double>>
     ) {
+
         when {
-            item.value.compareTo(1.000000) < 0 -> smaller.add(item)
-            item.value.compareTo(1.000001) > 0 -> bigger.add(item)
-            else -> probabilities[item.index] = 1.0
+            item.value.compareTo(ONE) < 0 -> smaller.add(item)
+            item.value.compareTo(ONE) > 0 -> bigger.add(item)
+            else -> probabilities[item.index] = ONE
         }
     }
 
@@ -67,7 +73,7 @@ class AliasLottery(
     }
 
     private fun Double.validate(): Double {
-        if (isNaN() || this < 0.0) {
+        if (isNaN() || this < ZERO) {
             throw IllegalArgumentException("$weights contains invalid weight: $this")
         }
         return this
