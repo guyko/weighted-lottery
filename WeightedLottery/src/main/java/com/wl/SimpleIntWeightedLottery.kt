@@ -4,7 +4,7 @@ import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 class SimpleIntWeightedLottery(private val weights: DoubleArray,
-                               private val random: () -> Random = { ThreadLocalRandom.current() }) : IntLottery {
+                               private val random: () -> ThreadLocalRandom = { ThreadLocalRandom.current() }) : IntLottery {
     private val accumulatedWeights = DoubleArray(weights.size)
 
     init {
