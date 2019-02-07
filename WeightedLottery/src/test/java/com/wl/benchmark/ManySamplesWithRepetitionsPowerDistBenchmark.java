@@ -1,5 +1,6 @@
 package com.wl.benchmark;
 
+import com.wl.AliasLottery;
 import com.wl.SimpleIntWeightedLottery;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -18,6 +19,12 @@ public class ManySamplesWithRepetitionsPowerDistBenchmark {
   @Benchmark
   public void simple() {
     SimpleIntWeightedLottery lottery = new SimpleIntWeightedLottery(benchmark.getPowerWeights(), ThreadLocalRandom::current);
+    benchmark.mTimesDrawKTimes(() -> lottery);
+  }
+
+  @Benchmark
+  public void alias() {
+    AliasLottery lottery = new AliasLottery(benchmark.getPowerWeights(), ThreadLocalRandom::current);
     benchmark.mTimesDrawKTimes(() -> lottery);
   }
 }
