@@ -14,13 +14,13 @@ abstract class WeightedLotteryNoRepetitionsTestBase {
     @Test
     fun `init works with normal distribution`() {
         val weightedLottery = weightedLottery(weights = WeightedLotteryBenchmark.randomWeights)
-        assertTrue(weightedLottery.draw() > 0)
+        assertTrue(weightedLottery.draw() >= 0)
     }
 
     @Test
     fun `init works with exponential distribution`() {
         val weightedLottery = weightedLottery(weights = WeightedLotteryBenchmark.powerWeights)
-        assertTrue(weightedLottery.draw() > 0)
+        assertTrue(weightedLottery.draw() >= 0)
     }
 
     @Test
@@ -41,6 +41,24 @@ abstract class WeightedLotteryNoRepetitionsTestBase {
         val weightedLottery = weightedLottery(weights = doubleArrayOf(0.2, 0.5, 1.0, 1.0, 0.75))
         val elements = (0 until 5).map { weightedLottery.draw() }.toSet()
         assertEquals((0 until 5).toSet(), elements)
+        assertNoMoreDraws(weightedLottery)
+    }
+
+    @Test
+    fun `one draw for each element with large ratios`() {
+        val weights = doubleArrayOf(1E+100, 1.0, 1E-100)
+        val weightedLottery = weightedLottery(weights = weights)
+        (0 until weights.size).forEach { assertEquals(it, weightedLottery.draw()) }
+        assertNoMoreDraws(weightedLottery)
+    }
+
+    @Test
+    fun `one draw for each element power ratios`() {
+        val size = 1000
+        val weights = (0 until size).map { Math.pow(0.5, it.toDouble()) }.toDoubleArray()
+        val weightedLottery = weightedLottery(weights = weights)
+        val elements = (0 until size).map { weightedLottery.draw() }.toSet()
+        assertEquals((0 until size).toSet(), elements)
         assertNoMoreDraws(weightedLottery)
     }
 
