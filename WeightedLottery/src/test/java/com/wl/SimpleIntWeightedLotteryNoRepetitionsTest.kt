@@ -1,7 +1,7 @@
 package com.wl
 
-import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 
 class SimpleIntWeightedLotteryNoRepetitionsTest : WeightedLotteryNoRepetitionsTestBase() {
-    override fun weightedLottery(weights: DoubleArray, random: () -> Random) = SimpleIntWeightedLotteryNoRepetitions(weights = weights, random = random)
+    override fun weightedLottery(weights: DoubleArray, random: () -> ThreadLocalRandom) = SimpleIntWeightedLotteryNoRepetitions(weights = weights, random = random)
 }

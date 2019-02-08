@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom
 
 class SimpleIntWeightedLotteryNoRepetitions(private val weights: DoubleArray,
                                             private val hitRatioThreshold: Double = 0.7,
-                                            private val random: () -> Random = { ThreadLocalRandom.current() }) : IntLottery {
+                                            private val random: () -> ThreadLocalRandom = { ThreadLocalRandom.current() }) : IntLottery {
 
     private var indexMapping = IntArray(weights.size) { it }
     private var delegate = SimpleIntWeightedLottery(weights, random)
