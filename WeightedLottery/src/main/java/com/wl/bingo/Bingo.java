@@ -17,12 +17,13 @@ public class Bingo implements IntLottery {
     if (empty()) {
       throw new NoSuchElementException();
     }
-    final int result = delegator.draw();
+    int result = delegator.draw();
     if (result >= 0) {
       return result;
     }
     delegator = delegator.delegate();
-    return delegator.draw();
+    while ((result = delegator.draw()) < 0);
+    return result;
   }
 
   @Override
