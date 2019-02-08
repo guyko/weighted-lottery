@@ -46,10 +46,6 @@ public class PartialSumsTree implements IntLotteryDelegator {
   }
 
   public int draw() {
-    if (tree[1] <= 0) {
-      return -1;
-    }
-
     double r = random.nextDouble(tree[1]);
     int root = 1;
     while (root <= n >>> 1) {
@@ -66,12 +62,6 @@ public class PartialSumsTree implements IntLotteryDelegator {
           root = left + 1;
         }
       }
-    }
-
-    // This can happen due to numerical instability.
-    // We need to rebuild the tree in this case.
-    if (selected[root - 1]) {
-      return -1;
     }
 
     remove(root);
@@ -99,6 +89,10 @@ public class PartialSumsTree implements IntLotteryDelegator {
 
   @Override
   public IntLotteryDelegator delegate() {
+    if (tree[1] > 0) {
+      return this;
+    }
+
     int numZeros = 0;
     int[] zeroWeightsIndexes = new int[n];
 
@@ -111,7 +105,7 @@ public class PartialSumsTree implements IntLotteryDelegator {
       }
     }
 
-    // sum <= 0 and numZeros < size can occur due to numerical instability.
+    // sum <= 0 and numZeros < size can occur due to numeric instability issues.
     // For example if the weights are {1E+100, 1} then 1E+100 + 1 == 1E+100
     final double[] selectedWeightsZeroed = Arrays.copyOf(weights, n);
     for (int i = 0; i < n; i++) {
