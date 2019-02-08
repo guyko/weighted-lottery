@@ -10,7 +10,6 @@ public class PartialSumsTree implements IntLotteryDelegator {
   private final int n;
   private final ThreadLocalRandom random;
   private int size;
-  private double sum;
 
   public PartialSumsTree(final double[] weights, final boolean[] selected, final int size, final ThreadLocalRandom random) {
     this.n = weights.length;
@@ -31,7 +30,6 @@ public class PartialSumsTree implements IntLotteryDelegator {
       final int left = i << 1;
       tree[i] = verify(tree[i]) + tree[left] + tree[left + 1];
     }
-    sum = tree[1];
 
     this.random = random;
     this.size = size;
@@ -48,7 +46,7 @@ public class PartialSumsTree implements IntLotteryDelegator {
   }
 
   public int draw() {
-    double r = random.nextDouble(sum);
+    double r = random.nextDouble(tree[1]);
     int root = 1;
     while (root <= n >>> 1) {
       final int left = root << 1;
@@ -77,7 +75,6 @@ public class PartialSumsTree implements IntLotteryDelegator {
       tree[root] -= rootWeight;
     }
     size--;
-    sum -= rootWeight;
   }
 
   @Override
@@ -92,7 +89,7 @@ public class PartialSumsTree implements IntLotteryDelegator {
 
   @Override
   public IntLotteryDelegator delegate() {
-    if (sum > 0) {
+    if (tree[1] > 0) {
       return this;
     }
 
