@@ -40,6 +40,16 @@ abstract class WeightedLotteryNoRepetitionsTestBase {
     }
 
     @Test
+    fun `one draw for each element power ratios`() {
+        val size = 1000
+        val weights = (0 until size).map { Math.pow(0.5, it.toDouble()) }.toDoubleArray()
+        val weightedLottery = weightedLottery(weights = weights)
+        val elements = (0 until size).map { weightedLottery.draw() }.toSet()
+        assertEquals((0 until size).toSet(), elements)
+        assertNoMoreDraws(weightedLottery)
+    }
+
+    @Test
     fun `one draw for each element, with zero weights`() {
         val weightedLottery = weightedLottery(weights = doubleArrayOf(0.0, 0.5, 1.0, 0.0, 0.75))
         val elements = (0 until 5).map { weightedLottery.draw() }.toSet()
