@@ -108,7 +108,7 @@ public class PartialSumsTree implements IntLotteryDelegator {
       }
     }
 
-    // Can happen due to numeric instability issues.
+    // sum <= 0 and numZeros < size can occur due to numeric instability issues.
     // For example if the weights are {1E+100, 1} then 1E+100 + 1 == 1E+100
     final double[] selectedWeightsZeroed = Arrays.copyOf(weights, n);
     for (int i = 0; i < n; i++) {
