@@ -1,6 +1,7 @@
 package com.wl.benchmark;
 
 import com.wl.SimpleIntWeightedLotteryNoRepetitions;
+import com.wl.bingo.Bingo;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -28,5 +29,10 @@ public class OneSampleNoRepetitionsRandomDistBenchmark {
   @Benchmark
   public void simple_09() {
     benchmark.drawKTimes(new SimpleIntWeightedLotteryNoRepetitions(weights, 0.9, ThreadLocalRandom::current));
+  }
+
+  @Benchmark
+  public void bingo() {
+    benchmark.drawKTimes(new Bingo(weights, ThreadLocalRandom.current()));
   }
 }
