@@ -14,13 +14,13 @@ abstract class WeightedLotteryNoRepetitionsTestBase {
     @Test
     fun `init works with normal distribution`() {
         val weightedLottery = weightedLottery(weights = WeightedLotteryBenchmark.randomWeights)
-        assertTrue(weightedLottery.draw() > 0)
+        assertTrue(weightedLottery.draw() >= 0)
     }
 
     @Test
     fun `init works with exponential distribution`() {
         val weightedLottery = weightedLottery(weights = WeightedLotteryBenchmark.powerWeights)
-        assertTrue(weightedLottery.draw() > 0)
+        assertTrue(weightedLottery.draw() >= 0)
     }
 
     @Test
