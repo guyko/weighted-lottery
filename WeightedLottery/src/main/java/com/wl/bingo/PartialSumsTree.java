@@ -57,13 +57,13 @@ public class PartialSumsTree implements IntLotteryDelegator {
       if (r < tree[left]) {
         root = left;
       } else {
-        r -= tree[left];
-        final double rootWeight = tree[root] - tree[left] - tree[left + 1];
-        if (r < rootWeight) {
-          break;
+        final int right = left + 1;
+        final double leftAndRootWeight = tree[root] - tree[right];
+        if (r >= leftAndRootWeight) {
+          r -= leftAndRootWeight;
+          root = right;
         } else {
-          r -= rootWeight;
-          root = left + 1;
+          break;
         }
       }
     }
