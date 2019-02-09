@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
-@OutputTimeUnit(TimeUnit.MILLISECONDS)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class ManySamplesNoRepetitionsPowerDistBenchmark {
 
   private static WeightedLotteryBenchmark benchmark = WeightedLotteryBenchmark.INSTANCE;
