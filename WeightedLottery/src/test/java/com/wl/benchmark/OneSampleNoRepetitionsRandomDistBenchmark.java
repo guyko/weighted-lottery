@@ -24,12 +24,12 @@ public class OneSampleNoRepetitionsRandomDistBenchmark {
   @Benchmark
   public void simple_07() {
     benchmark.drawKTimes(new SimpleIntWeightedLotteryNoRepetitions(weights, 0.7, ThreadLocalRandom::current));
-  }
+  }/*
 
   @Benchmark
   public void simple_09() {
     benchmark.drawKTimes(new SimpleIntWeightedLotteryNoRepetitions(weights, 0.9, ThreadLocalRandom::current));
-  }
+  }*/
 
   @Benchmark
   public void bingo() {
