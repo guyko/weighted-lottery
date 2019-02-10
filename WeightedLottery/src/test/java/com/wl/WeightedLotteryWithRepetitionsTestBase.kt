@@ -1,28 +1,12 @@
 package com.wl
 
-import com.wl.benchmark.WeightedLotteryBenchmark
 import org.junit.Test
-import java.util.concurrent.ThreadLocalRandom
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
-abstract class WeightedLotteryWithRepetitionsTestBase {
-
-    abstract fun weightedLottery(weights: DoubleArray, random: () -> ThreadLocalRandom = { ThreadLocalRandom.current() }): IntLottery
-
-    @Test
-    fun `init works with normal distribution`() {
-        val weightedLottery = weightedLottery(weights = WeightedLotteryBenchmark.randomWeights)
-        assertTrue(weightedLottery.draw() >= 0)
-    }
-
-    @Test
-    fun `init works with exponential distribution`() {
-        val weightedLottery = weightedLottery(weights = WeightedLotteryBenchmark.powerWeights)
-        assertTrue(weightedLottery.draw() >= 0)
-    }
+abstract class WeightedLotteryWithRepetitionsTestBase : LotteryTestBase() {
 
     @Test
     fun `empty weights`() {
