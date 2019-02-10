@@ -43,7 +43,7 @@ benchmark.mTimesDrawKTimes(() -> lottery);
 Using _WeightedLotteryBenchmark_ utility, one can obtain both random and exponential weights
 
 ```Java
-double[] weights = benchmark.getPowerWeights(); // [0.5, 0.25, 0.125, ...]
+double[] weights = benchmark.getPowerWeights(); // [0.9^1, 0.9^2, 0.9^3, ...]
 benchmark.drawKTimes(new SimpleIntWeightedLottery(weights, ThreadLocalRandom::current));
 ```
 ## FAQ
