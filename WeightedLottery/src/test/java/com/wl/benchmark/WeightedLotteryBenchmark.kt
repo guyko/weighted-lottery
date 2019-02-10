@@ -11,7 +11,7 @@ import java.util.*
 object WeightedLotteryBenchmark {
     private val N = 5000
     private val K = 50
-    private val M = 500
+    private val M = 50000
 
     private val random = Random(1)
     val randomWeights = (0 until N).map { random.nextDouble() }.toDoubleArray()
