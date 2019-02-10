@@ -15,7 +15,7 @@ object WeightedLotteryBenchmark {
 
     private val random = Random(1)
     val randomWeights = (0 until N).map { random.nextDouble() }.toDoubleArray()
-    val powerWeights = (0 until N).map { Math.pow(0.9, it.toDouble()) }.shuffled().toDoubleArray()
+    val powerWeights = (1 until N + 1).map { Math.pow(0.9, it.toDouble()) }.shuffled().toDoubleArray()
 
 
     fun mTimesDrawKTimes(weightedLottery: () -> IntLottery) {
