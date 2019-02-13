@@ -14,12 +14,12 @@ A typical benchmark class will look like this:
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class OneSampleWithRepetitionsRandomDistBenchmark {
 
-  private static WeightedLotteryBenchmark benchmark = WeightedLotteryBenchmark.INSTANCE;
+  private static LotteryTestUtils utils = LotteryTestUtils.INSTANCE;
 
   @Benchmark
   public void simple() {
-    double[] weights = benchmark.getRandomWeights();
-    benchmark.drawKTimes(new SimpleIntWeightedLottery(weights, ThreadLocalRandom::current));
+    double[] weights = utils.getRandomWeights();
+    utils.drawKTimes(new SimpleIntWeightedLottery(weights, ThreadLocalRandom::current));
   }
 }
 ```
@@ -34,7 +34,7 @@ Saperated benchmark classes for the two types of implementations
 Some implementations may be better when reusing the same state when weights are the same.  Using _'mTimesDrawKTimes'_ with a lambda, makes it possible to keep that state and reuse it (in this case, the state is the lottery instance)
 
 ```Java
-double[] weights = benchmark.getRandomWeights();
+double[] weights = utils.getRandomWeights();
 SimpleIntWeightedLottery lottery = new SimpleIntWeightedLottery(weights, ThreadLocalRandom::current);
 benchmark.mTimesDrawKTimes(() -> lottery);
 ```
@@ -43,7 +43,7 @@ benchmark.mTimesDrawKTimes(() -> lottery);
 Using _WeightedLotteryBenchmark_ utility, one can obtain both random and exponential weights
 
 ```Java
-double[] weights = benchmark.getPowerWeights(); // [0.5, 0.25, 0.125, ...]
+double[] weights = utils.getPowerWeights(); // [0.9^1, 0.9^2, 0.9^3, ...]
 benchmark.drawKTimes(new SimpleIntWeightedLottery(weights, ThreadLocalRandom::current));
 ```
 ## FAQ
