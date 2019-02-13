@@ -2,6 +2,7 @@ package com.wl
 
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
+import java.util.concurrent.atomic.AtomicBoolean
 
 const val ONE = 1.000000
 const val ZERO = 0.0
@@ -17,6 +18,7 @@ class AliasLottery(
     private var slow = true
     private val slowLottery = MySimpleIntWeightedLottery(weights, random)
     private var counter = 0
+    private val notInited = AtomicBoolean(true)
 
 
     private fun initSlow() {
@@ -66,7 +68,9 @@ class AliasLottery(
     override fun draw(): Int {
         if (slow) {
             if (counter > 1000000) {
-                Thread() { initSlow() }.start()
+                if (notInited.compareAndSet(true, false)) {
+                    Thread() { initSlow() }.start()
+                }
             }
             counter ++
             return slowLottery.draw()
