@@ -6,52 +6,71 @@ import java.util.concurrent.ThreadLocalRandom
 const val ONE = 1.000000
 const val ZERO = 0.0
 
+
 class AliasLottery(
     private val weights: DoubleArray,
-    private val random: () -> Random = { ThreadLocalRandom.current() }
+    private val random: () -> ThreadLocalRandom = { ThreadLocalRandom.current() }
 ) : IntLottery {
-    private val probabilities = DoubleArray(weights.size) { ONE }
-    private val aliases = IntArray(weights.size) { random().nextInt(weights.size) }
+    private val size = weights.size
+    private lateinit var probabilities: DoubleArray
+    private lateinit var aliases : IntArray
+    private var slow = true
+    private val slowLottery = MySimpleIntWeightedLottery(weights, random)
+    private var counter = 0
 
-    init {
-        val sumOfWeights = weights.sum()
-        val itemsWithIndex = weights
-            .withIndex()
-            .map {
-                it.value.validate()
-                IndexedValue(it.index, it.value * weights.size / sumOfWeights)
-            }
-        val bigger = mutableListOf<IndexedValue<Double>>()
-        val smaller = mutableListOf<IndexedValue<Double>>()
-        for (item in itemsWithIndex) {
-            putItemInCorrectBag(item, bigger, smaller)
+
+    private fun initSlow() {
+        probabilities = DoubleArray(size) { ONE }
+        aliases = IntArray(size) { random().nextInt(size) }
+        var sumOfWeights = 0.0
+        for (index in 0 until size) {
+            sumOfWeights += weights[index]
+        }
+        val bigger = LinkedList<Int>()
+        val smaller = LinkedList<Int>()
+        val values = DoubleArray(size)
+        for (index in 0 until size) {
+            val value  = weights[index].validate() * size / sumOfWeights
+            putItemInCorrectBag(index, value, bigger, smaller)
+            values[index] = value
         }
         while (smaller.isNotEmpty() && bigger.isNotEmpty()) {
-            val pickSmaller = smaller.removeAt(0)
-            val pickBigger = bigger.removeAt(0)
-            val delta = pickBigger.value - (ONE - pickSmaller.value)
-            probabilities[pickSmaller.index] = pickSmaller.value
-            aliases[pickSmaller.index] = pickBigger.index
-            putItemInCorrectBag(IndexedValue(pickBigger.index, delta), bigger, smaller)
+            val pickSmaller = smaller.pop()
+            val pickSmallerValue = values[pickSmaller]
+            val pickBigger = bigger.pop()
+            val pickBiggerValue = values[pickBigger]
+            val delta = pickBiggerValue + pickSmallerValue - ONE
+            probabilities[pickSmaller] = pickSmallerValue
+            aliases[pickSmaller] = pickBigger
+            putItemInCorrectBag(pickBigger, delta, bigger, smaller)
         }
-        smaller.forEach { putItemInCorrectBag(IndexedValue(it.index, ONE), bigger, smaller) }
-        bigger.forEach { putItemInCorrectBag(IndexedValue(it.index, ONE), bigger, smaller) }
+        smaller.forEach { probabilities[it] = ONE }
+        bigger.forEach { probabilities[it] = ONE }
+        slow = false
     }
 
-    private fun putItemInCorrectBag(
-        item: IndexedValue<Double>,
-        bigger: MutableList<IndexedValue<Double>>,
-        smaller: MutableList<IndexedValue<Double>>
+    private inline fun putItemInCorrectBag(
+        index: Int,
+        value: Double,
+        bigger: MutableList<Int>,
+        smaller: MutableList<Int>
     ) {
 
         when {
-            item.value.compareTo(ONE) < 0 -> smaller.add(item)
-            item.value.compareTo(ONE) > 0 -> bigger.add(item)
-            else -> probabilities[item.index] = ONE
+            value.compareTo(ONE) > 0 -> bigger.add(index)
+            value.compareTo(ONE) < 0 -> smaller.add(index)
+            else -> probabilities[index] = ONE
         }
     }
 
     override fun draw(): Int {
+        if (slow) {
+            if (counter > 1000000) {
+                Thread() { initSlow() }.start()
+            }
+            counter ++
+            return slowLottery.draw()
+        }
         if (weights.isEmpty()) {
             throw NoSuchElementException()
         }
@@ -78,4 +97,45 @@ class AliasLottery(
         }
         return this
     }
+}
+
+class MySimpleIntWeightedLottery(private val weights: DoubleArray,
+                               private val random: () -> ThreadLocalRandom = { ThreadLocalRandom.current() }) : IntLottery {
+    private val accumulatedWeights = DoubleArray(weights.size)
+
+    init {
+        if (weights.isNotEmpty()) {
+            accumulatedWeights[0] = weights[0].validate()
+            for (index in 1 until weights.size) {
+                accumulatedWeights[index] = weights[index].validate() + accumulatedWeights[index - 1]
+            }
+        }
+    }
+
+
+    override fun draw(): Int {
+        val sumOfWeights = accumulatedWeights.last()
+        if (sumOfWeights == 0.0) {
+            return drawUniformly()
+        }
+        val key = random().nextDouble() * sumOfWeights
+        val pos = Arrays.binarySearch(accumulatedWeights, key)
+        return when {
+            pos < 0 -> -pos - 1
+            else -> pos
+        }
+    }
+
+    private fun Double.validate(): Double {
+        if (isNaN() || this < 0.0) {
+            throw IllegalArgumentException("$weights contains invalid weight: $this")
+        }
+        return this
+    }
+
+    private fun drawUniformly() = random().nextInt(accumulatedWeights.size)
+
+    override fun empty() = remaining() == 0
+
+    override fun remaining() = accumulatedWeights.size
 }
