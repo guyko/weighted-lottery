@@ -42,6 +42,8 @@
 
   <modules>
     <module>WeightedLottery</module>
+    <module>WeightedLottery-scala</module>
+    <module>WeightedLottery-benchmark</module>
   </modules>
 
   <dependencies>
@@ -58,10 +60,49 @@
       <version>${jmh.version}</version>
       <scope>test</scope>
     </dependency>
+
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-library</artifactId>
+      <version>2.11.4</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.scala-lang</groupId>
+      <artifactId>scala-reflect</artifactId>
+      <version>2.11.4</version>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.scalatest</groupId>
+      <artifactId>scalatest_2.11</artifactId>
+      <version>2.2.2</version>
+      <scope>test</scope>
+    </dependency>
+    
   </dependencies>
 
   <dependencyManagement>
     <dependencies>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>WeightedLottery</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>WeightedLottery-scala</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>WeightedLottery</artifactId>
+        <version>${project.version}</version>
+        <scope>test</scope>
+        <type>test-jar</type>
+      </dependency>
+
       <dependency>
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
@@ -98,6 +139,41 @@
   <build>
     <pluginManagement>
       <plugins>
+        <plugin>
+          <groupId>net.alchim31.maven</groupId>
+          <artifactId>scala-maven-plugin</artifactId>
+          <version>3.2.0</version>
+          <executions>
+            <execution>
+              <id>scala-compile-first</id>
+              <phase>process-resources</phase>
+              <goals>
+                <goal>add-source</goal>
+                <goal>compile</goal>
+              </goals>
+            </execution>
+            <execution>
+              <id>scala-test-compile</id>
+              <phase>process-test-resources</phase>
+              <goals>
+                <goal>testCompile</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <recompileMode>incremental</recompileMode>
+            <useZincServer>true</useZincServer>
+            <javacArgs>
+              <javacArg>-source</javacArg>
+              <javacArgs>1.8</javacArgs>
+              <javacArg>-target</javacArg>
+              <javacArgs>1.8</javacArgs>
+            </javacArgs>
+            <jvmArgs>
+              <jvmArg>-Xmx4096m</jvmArg>
+            </jvmArgs>
+          </configuration>
+        </plugin>
         <plugin>
           <groupId>org.codehaus.gmavenplus</groupId>
           <artifactId>gmavenplus-plugin</artifactId>

@@ -1,5 +1,6 @@
 package com.wl.benchmark;
 
+import com.wl.LotteryTestUtils;
 import com.wl.SimpleIntWeightedLotteryNoRepetitions;
 import com.wl.bingo.Bingo;
 import org.openjdk.jmh.annotations.Benchmark;
@@ -13,26 +14,26 @@ import java.util.concurrent.TimeUnit;
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
 public class OneSampleNoRepetitionsPowerDistBenchmark {
-  private static WeightedLotteryBenchmark benchmark = WeightedLotteryBenchmark.INSTANCE;
-  private static final double[] weights = benchmark.getPowerWeights();
+  private static LotteryTestUtils utils = LotteryTestUtils.INSTANCE;
+  private static final double[] weights = utils.getPowerWeights();
 
   @Benchmark
   public void simple_05() {
-    benchmark.drawKTimes(new SimpleIntWeightedLotteryNoRepetitions(weights, 0.5, ThreadLocalRandom::current));
+    utils.drawKTimes(new SimpleIntWeightedLotteryNoRepetitions(weights, 0.5, ThreadLocalRandom::current));
   }
 
   @Benchmark
   public void simple_07() {
-    benchmark.drawKTimes(new SimpleIntWeightedLotteryNoRepetitions(weights, 0.7, ThreadLocalRandom::current));
+    utils.drawKTimes(new SimpleIntWeightedLotteryNoRepetitions(weights, 0.7, ThreadLocalRandom::current));
   }/*
 
   @Benchmark
   public void simple_09() {
-    benchmark.drawKTimes(new SimpleIntWeightedLotteryNoRepetitions(weights, 0.9, ThreadLocalRandom::current));
+    utils.drawKTimes(new SimpleIntWeightedLotteryNoRepetitions(weights, 0.9, ThreadLocalRandom::current));
   }*/
 
   @Benchmark
   public void bingo() {
-    benchmark.drawKTimes(new Bingo(weights, ThreadLocalRandom.current()));
+    utils.drawKTimes(new Bingo(weights, ThreadLocalRandom.current()));
   }
 }

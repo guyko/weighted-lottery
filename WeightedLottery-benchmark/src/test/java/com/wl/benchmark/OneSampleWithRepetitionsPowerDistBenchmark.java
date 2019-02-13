@@ -1,6 +1,7 @@
 package com.wl.benchmark;
 
 import com.wl.AliasLottery;
+import com.wl.LotteryTestUtils;
 import com.wl.SimpleIntWeightedLottery;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -12,19 +13,17 @@ import java.util.concurrent.TimeUnit;
 
 @BenchmarkMode(Mode.AverageTime)
 @OutputTimeUnit(TimeUnit.NANOSECONDS)
-public class ManySamplesWithRepetitionsRandomDistBenchmark {
+public class OneSampleWithRepetitionsPowerDistBenchmark {
 
-  private static WeightedLotteryBenchmark benchmark = WeightedLotteryBenchmark.INSTANCE;
+  private static LotteryTestUtils utils = LotteryTestUtils.INSTANCE;
 
   @Benchmark
   public void simple() {
-    SimpleIntWeightedLottery lottery = new SimpleIntWeightedLottery(benchmark.getRandomWeights(), ThreadLocalRandom::current);
-    benchmark.mTimesDrawKTimes(() -> lottery);
+    utils.drawKTimes(new SimpleIntWeightedLottery(utils.getPowerWeights(), ThreadLocalRandom::current));
   }
 
   @Benchmark
   public void alias() {
-    AliasLottery lottery = new AliasLottery(benchmark.getRandomWeights(), ThreadLocalRandom::current);
-    benchmark.mTimesDrawKTimes(() -> lottery);
+    utils.drawKTimes(new AliasLottery(utils.getPowerWeights(), ThreadLocalRandom::current));
   }
 }
