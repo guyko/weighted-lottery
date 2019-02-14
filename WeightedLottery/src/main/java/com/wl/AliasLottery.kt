@@ -3,8 +3,8 @@ package com.wl
 import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
-const val ONE = 1.000000
-const val ZERO = 0.0
+private const val ONE = 1.000000
+private const val ZERO = 0.0
 
 class AliasLottery(
     private val weights: DoubleArray,
@@ -34,8 +34,8 @@ class AliasLottery(
             aliases[pickSmaller.index] = pickBigger.index
             putItemInCorrectBag(IndexedValue(pickBigger.index, delta), bigger, smaller)
         }
-        smaller.forEach { putItemInCorrectBag(IndexedValue(it.index, ONE), bigger, smaller) }
-        bigger.forEach { putItemInCorrectBag(IndexedValue(it.index, ONE), bigger, smaller) }
+        smaller.forEach { probabilities[it.index] = ONE }
+        bigger.forEach { probabilities[it.index] = ONE }
     }
 
     private fun putItemInCorrectBag(
