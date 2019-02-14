@@ -34,8 +34,8 @@ class AliasLottery(
             aliases[pickSmaller.index] = pickBigger.index
             putItemInCorrectBag(IndexedValue(pickBigger.index, delta), bigger, smaller)
         }
-        smaller.forEach { putItemInCorrectBag(IndexedValue(it.index, ONE), bigger, smaller) }
-        bigger.forEach { putItemInCorrectBag(IndexedValue(it.index, ONE), bigger, smaller) }
+        smaller.forEach { probabilities[it.index] = ONE }
+        bigger.forEach { probabilities[it.index] = ONE }
     }
 
     private fun putItemInCorrectBag(
