@@ -3,6 +3,7 @@ package com.wl.benchmark;
 import com.wl.AliasLottery;
 import com.wl.LotteryTestUtils;
 import com.wl.SimpleIntWeightedLottery;
+import com.wl.TwistedAliasLottery;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -25,5 +26,10 @@ public class OneSampleWithRepetitionsPowerDistBenchmark {
   @Benchmark
   public void alias() {
     utils.drawKTimes(new AliasLottery(utils.getPowerWeights(), ThreadLocalRandom::current));
+  }
+
+  @Benchmark
+  public void twistedAlias() {
+    utils.drawKTimes(new TwistedAliasLottery(utils.getPowerWeights(), ThreadLocalRandom::current));
   }
 }

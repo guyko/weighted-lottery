@@ -1,8 +1,10 @@
 package com.wl.benchmark;
 
 import com.wl.AliasLottery;
+import com.wl.IntLottery;
 import com.wl.LotteryTestUtils;
 import com.wl.SimpleIntWeightedLottery;
+import com.wl.TwistedAliasLottery;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -26,6 +28,12 @@ public class ManySamplesWithRepetitionsRandomDistBenchmark {
   @Benchmark
   public void alias() {
     AliasLottery lottery = new AliasLottery(utils.getRandomWeights(), ThreadLocalRandom::current);
+    utils.mTimesDrawKTimes(() -> lottery);
+  }
+  
+  @Benchmark
+  public void twistedAlias() {
+    IntLottery lottery = new TwistedAliasLottery(utils.getRandomWeights(), ThreadLocalRandom::current);
     utils.mTimesDrawKTimes(() -> lottery);
   }
 }
