@@ -2,6 +2,7 @@ package com.wl.benchmark;
 
 import com.wl.LotteryTestUtils;
 import com.wl.SimpleIntWeightedLotteryNoRepetitions;
+import com.wl.StatefulTwisted;
 import com.wl.bingo.Bingo;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -36,5 +37,10 @@ public class ManySamplesNoRepetitionsPowerDistBenchmark {
   @Benchmark
   public void bingo() {
     utils.mTimesDrawKTimes(() -> new Bingo(weights, ThreadLocalRandom.current()));
+  }
+
+  @Benchmark
+  public void statefulTwisted() {
+    utils.mTimesDrawKTimes(() -> new StatefulTwisted(weights, 0.7, ThreadLocalRandom::current));
   }
 }
