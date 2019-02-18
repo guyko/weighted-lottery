@@ -8,7 +8,7 @@ private const val ONE = 1.000000
 private const val ZERO = 0.0
 
 
-class TwistedAliasLottery(
+class TwistedBrother(
     private val weights: DoubleArray,
     private val random: () -> ThreadLocalRandom = { ThreadLocalRandom.current() }
 ) : IntLottery {
@@ -19,7 +19,7 @@ class TwistedAliasLottery(
     private val slowLottery = MySimpleIntWeightedLottery(weights, random)
     private var counter = 0
     private val notInited = AtomicBoolean(true)
-    private val whenToInit = 1_000_000
+    private val whenToInit = 10_000
 
 
     private fun initSlow() {
@@ -102,45 +102,46 @@ class TwistedAliasLottery(
         }
         return this
     }
-}
 
-private class MySimpleIntWeightedLottery(private val weights: DoubleArray,
-                               private val random: () -> ThreadLocalRandom = { ThreadLocalRandom.current() }) : IntLottery {
-    private val accumulatedWeights = DoubleArray(weights.size)
+    private class MySimpleIntWeightedLottery(private val weights: DoubleArray,
+                                             private val random: () -> ThreadLocalRandom = { ThreadLocalRandom.current() }) : IntLottery {
+        private val accumulatedWeights = DoubleArray(weights.size)
 
-    init {
-        if (weights.isNotEmpty()) {
-            accumulatedWeights[0] = weights[0].validate()
-            for (index in 1 until weights.size) {
-                accumulatedWeights[index] = weights[index].validate() + accumulatedWeights[index - 1]
+        init {
+            if (weights.isNotEmpty()) {
+                accumulatedWeights[0] = weights[0].validate()
+                for (index in 1 until weights.size) {
+                    accumulatedWeights[index] = weights[index].validate() + accumulatedWeights[index - 1]
+                }
             }
         }
-    }
 
 
-    override fun draw(): Int {
-        val sumOfWeights = accumulatedWeights.last()
-        if (sumOfWeights == 0.0) {
-            return drawUniformly()
+        override fun draw(): Int {
+            val sumOfWeights = accumulatedWeights.last()
+            if (sumOfWeights == 0.0) {
+                return drawUniformly()
+            }
+            val key = random().nextDouble() * sumOfWeights
+            val pos = Arrays.binarySearch(accumulatedWeights, key)
+            return when {
+                pos < 0 -> -pos - 1
+                else -> pos
+            }
         }
-        val key = random().nextDouble() * sumOfWeights
-        val pos = Arrays.binarySearch(accumulatedWeights, key)
-        return when {
-            pos < 0 -> -pos - 1
-            else -> pos
+
+        private fun Double.validate(): Double {
+            if (isNaN() || this < 0.0) {
+                throw IllegalArgumentException("$weights contains invalid weight: $this")
+            }
+            return this
         }
+
+        private fun drawUniformly() = random().nextInt(accumulatedWeights.size)
+
+        override fun empty() = remaining() == 0
+
+        override fun remaining() = accumulatedWeights.size
     }
-
-    private fun Double.validate(): Double {
-        if (isNaN() || this < 0.0) {
-            throw IllegalArgumentException("$weights contains invalid weight: $this")
-        }
-        return this
-    }
-
-    private fun drawUniformly() = random().nextInt(accumulatedWeights.size)
-
-    override fun empty() = remaining() == 0
-
-    override fun remaining() = accumulatedWeights.size
 }
+
