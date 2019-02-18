@@ -41,6 +41,6 @@ public class ManySamplesNoRepetitionsPowerDistBenchmark {
 
   @Benchmark
   public void statefulTwisted() {
-    utils.mTimesDrawKTimes(() -> new StatefulTwisted(weights, 0.7, ThreadLocalRandom::current));
+    utils.mTimesDrawKTimes(() -> new StatefulTwisted(weights, ThreadLocalRandom::current));
   }
 }

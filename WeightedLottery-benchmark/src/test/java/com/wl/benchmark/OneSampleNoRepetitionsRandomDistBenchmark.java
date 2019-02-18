@@ -40,6 +40,6 @@ public class OneSampleNoRepetitionsRandomDistBenchmark {
 
   @Benchmark
   public void statefulTwisted() {
-    utils.drawKTimes(new StatefulTwisted(weights, 0.7, ThreadLocalRandom::current));
+    utils.drawKTimes(new StatefulTwisted(weights, ThreadLocalRandom::current));
   }
 }

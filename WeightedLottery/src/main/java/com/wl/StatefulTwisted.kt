@@ -4,9 +4,9 @@ import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 class StatefulTwisted(private val weights: DoubleArray,
-                      private val hitRatioThreshold: Double = 0.7,
                       private val random: () -> ThreadLocalRandom = { ThreadLocalRandom.current() }) : IntLottery {
 
+  private val hitRatioThreshold: Double = 0.5
     private var indexMapping = IntArray(weights.size) { it }
     private var delegate = TwistedSister(weights, random)
     private val selected = BooleanArray(weights.size)
