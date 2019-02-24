@@ -27,7 +27,7 @@
     </plugins>
   </build>
   <parent>
-    <groupId>com.wl</groupId>
+    <groupId>io.github.guyko</groupId>
     <artifactId>weighted-lottery</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
