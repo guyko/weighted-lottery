@@ -3,9 +3,9 @@ package com.wl
 import java.util.*
 
 object LotteryTestUtils {
-    private val N = 5000
-    private val K = 50
-    private val M = 50000
+    val N = 5000
+    val K = 50
+    val M = 50000
 
     private val random = Random(1)
     val randomWeights = (0 until N).map { random.nextDouble() }.toDoubleArray()

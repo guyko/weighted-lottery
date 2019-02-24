@@ -1,6 +1,7 @@
 package com.wl.benchmark;
 
 import com.wl.LotteryTestUtils;
+import com.wl.ReservoirLottery;
 import com.wl.SimpleIntWeightedLotteryNoRepetitions;
 import com.wl.StatefulTwisted;
 import com.wl.bingo.Bingo;
@@ -27,12 +28,12 @@ public class ManySamplesNoRepetitionsRandomDistBenchmark {
   @Benchmark
   public void simple_07() {
     utils.mTimesDrawKTimes(() -> new SimpleIntWeightedLotteryNoRepetitions(weights, 0.7, ThreadLocalRandom::current));
-  }/*
+  }
 
   @Benchmark
-  public void simple_09() {
-    utils.mTimesDrawKTimes(() -> new SimpleIntWeightedLotteryNoRepetitions(weights, 0.9, ThreadLocalRandom::current));
-  }*/
+  public void reservoir() {
+    utils.mTimesDrawKTimes(() -> new ReservoirLottery(weights, LotteryTestUtils.INSTANCE.getK(), ThreadLocalRandom::current));
+  }
 
   @Benchmark
   public void bingo() {

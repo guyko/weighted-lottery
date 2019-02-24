@@ -27,7 +27,7 @@
     </plugins>
   </build>
   <parent>
-    <groupId>com.outbrain.swinfra</groupId>
+    <groupId>com.wl</groupId>
     <artifactId>weighted-lottery</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
