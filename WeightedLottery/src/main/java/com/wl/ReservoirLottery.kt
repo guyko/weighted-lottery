@@ -8,7 +8,7 @@ class ReservoirLottery(private val weights: DoubleArray,
                        private val k: Int,
                        private val random: () -> Random = { ThreadLocalRandom.current() }) : IntLottery {
 
-    private val selectedToResorvoir = BooleanArray(k)
+    private val selectedToResorvoir = BooleanArray(weights.size)
     private val reservoir = IntArray(k) {
         var wsum = 0.0
         var r = -1
