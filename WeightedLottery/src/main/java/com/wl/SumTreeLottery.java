@@ -1,14 +1,12 @@
-package com.wl.bingo;
-
-import com.wl.IntLottery;
+package com.wl;
 
 import java.util.NoSuchElementException;
 import java.util.concurrent.ThreadLocalRandom;
 
-public class Bingo implements IntLottery {
+public class SumTreeLottery implements IntLottery {
   private IntLotteryDelegator delegator;
 
-  public Bingo(final double[] weights, final ThreadLocalRandom random) {
+  public SumTreeLottery(final double[] weights, final ThreadLocalRandom random) {
     delegator = new PartialSumsTree(weights, new boolean[weights.length], weights.length, random);
   }
 

@@ -4,7 +4,7 @@ import com.wl.LotteryTestUtils;
 import com.wl.ReservoirLottery;
 import com.wl.SimpleIntWeightedLotteryNoRepetitions;
 import com.wl.StatefulTwisted;
-import com.wl.bingo.Bingo;
+import com.wl.SumTreeLottery;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Mode;
@@ -36,8 +36,8 @@ public class ManySamplesNoRepetitionsPowerDistBenchmark {
   }
 
   @Benchmark
-  public void bingo() {
-    utils.mTimesDrawKTimes(() -> new Bingo(weights, ThreadLocalRandom.current()));
+  public void sumTree() {
+    utils.mTimesDrawKTimes(() -> new SumTreeLottery(weights, ThreadLocalRandom.current()));
   }
 
   @Benchmark

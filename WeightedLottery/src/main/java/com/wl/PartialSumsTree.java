@@ -1,4 +1,4 @@
-package com.wl.bingo;
+package com.wl;
 
 import java.util.Arrays;
 import java.util.concurrent.ThreadLocalRandom;
