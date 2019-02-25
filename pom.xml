@@ -7,6 +7,7 @@
   <version>1.0</version>
   <name>weighted-lottery</name>
   <url>http://maven.apache.org</url>
+  <description>multiple benchmarked implementations of weighted lottery</description>
 
 
   <properties>
@@ -15,6 +16,7 @@
     <kotlin.compiler.incremental>true</kotlin.compiler.incremental>
     <experimentalCoroutines>enable</experimentalCoroutines>
     <jmh.version>1.21</jmh.version>
+    <skipSign>true</skipSign>
   </properties>
 
   <licenses>
@@ -42,7 +44,6 @@
 
   <modules>
     <module>WeightedLottery</module>
-    <module>WeightedLottery-scala</module>
     <module>WeightedLottery-benchmark</module>
   </modules>
 
@@ -60,25 +61,6 @@
       <version>${jmh.version}</version>
       <scope>test</scope>
     </dependency>
-
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-library</artifactId>
-      <version>2.11.4</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.scala-lang</groupId>
-      <artifactId>scala-reflect</artifactId>
-      <version>2.11.4</version>
-      <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.scalatest</groupId>
-      <artifactId>scalatest_2.11</artifactId>
-      <version>2.2.2</version>
-      <scope>test</scope>
-    </dependency>
     
   </dependencies>
 
@@ -87,11 +69,6 @@
       <dependency>
         <groupId>${project.groupId}</groupId>
         <artifactId>WeightedLottery</artifactId>
-        <version>${project.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>${project.groupId}</groupId>
-        <artifactId>WeightedLottery-scala</artifactId>
         <version>${project.version}</version>
       </dependency>
 
@@ -136,44 +113,20 @@
   </dependencyManagement>
 
 
+  <distributionManagement>
+    <repository>
+      <id>oss.sonatype.org</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
+    <snapshotRepository>
+      <id>oss.sonatype.org</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
+
   <build>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>net.alchim31.maven</groupId>
-          <artifactId>scala-maven-plugin</artifactId>
-          <version>3.2.0</version>
-          <executions>
-            <execution>
-              <id>scala-compile-first</id>
-              <phase>process-resources</phase>
-              <goals>
-                <goal>add-source</goal>
-                <goal>compile</goal>
-              </goals>
-            </execution>
-            <execution>
-              <id>scala-test-compile</id>
-              <phase>process-test-resources</phase>
-              <goals>
-                <goal>testCompile</goal>
-              </goals>
-            </execution>
-          </executions>
-          <configuration>
-            <recompileMode>incremental</recompileMode>
-            <useZincServer>true</useZincServer>
-            <javacArgs>
-              <javacArg>-source</javacArg>
-              <javacArgs>1.8</javacArgs>
-              <javacArg>-target</javacArg>
-              <javacArgs>1.8</javacArgs>
-            </javacArgs>
-            <jvmArgs>
-              <jvmArg>-Xmx4096m</jvmArg>
-            </jvmArgs>
-          </configuration>
-        </plugin>
         <plugin>
           <groupId>org.codehaus.gmavenplus</groupId>
           <artifactId>gmavenplus-plugin</artifactId>
@@ -258,42 +211,62 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-jar-plugin</artifactId>
-        <version>2.4</version>
-        <configuration>
-          <archive>
-            <manifestEntries>
-              <timestamp>${maven.build.timestamp}</timestamp>
-            </manifestEntries>
-          </archive>
-        </configuration>
-
-        <executions>
-          <execution>
-            <id>make-a-jar</id>
-            <phase>compile</phase>
-            <goals>
-              <goal>jar</goal>
-            </goals>
-          </execution>
-
-        </executions>
-
-      </plugin>
-
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-source-plugin</artifactId>
-        <version>2.3</version>
+        <version>2.2.1</version>
         <executions>
           <execution>
             <id>attach-sources</id>
             <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>2.9.1</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
               <goal>jar</goal>
             </goals>
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-gpg-plugin</artifactId>
+        <version>1.5</version>
+        <configuration>
+          <skip>
+            ${skipSign}
+          </skip>
+        </configuration>
+        <executions>
+          <execution>
+            <id>sign-artifacts</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>sign</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+      <groupId>org.sonatype.plugins</groupId>
+      <artifactId>nexus-staging-maven-plugin</artifactId>
+      <version>1.6.7</version>
+      <extensions>true</extensions>
+      <configuration>
+        <serverId>ossrh</serverId>
+        <nexusUrl>https://oss.sonatype.org/</nexusUrl>
+        <autoReleaseAfterClose>true</autoReleaseAfterClose>
+      </configuration>
+      </plugin>
+
+      
     </plugins>
   </build>
 
