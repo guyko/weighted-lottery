@@ -1,4 +1,4 @@
-# [weighted-lottery](https://github.com/guyko/weighted-lottery) [![Build Status](https://api.travis-ci.org/guyko/weighted-lottery.png?branch=master)](https://api.travis-ci.org/guyko/weighted-lottery) [![Apache License V.2](https://img.shields.io/badge/license-Apache%20V.2-blue.svg)](https://github.com/guyko/weighted-lottery/blob/master/LICENSE)
+# [weighted-lottery](https://github.com/guyko/weighted-lottery) [![Build Status](https://api.travis-ci.org/guyko/weighted-lottery.png?branch=master)](https://api.travis-ci.org/guyko/weighted-lottery) [![Apache License V.2](https://img.shields.io/badge/license-Apache%20V.2-blue.svg)](https://github.com/guyko/weighted-lottery/blob/master/LICENSE) [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.guyko/WeightedLottery/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.guyko/WeightedLottery)
 
 Multiple implementations of weighted lottery, in java, scala or kotlin.
 
