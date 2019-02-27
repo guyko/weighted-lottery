@@ -11,7 +11,7 @@ fun main(args: Array<String>) {
             .include("com.wl.benchmark.*")
             .addProfiler(GCProfiler::class.java)
             .resultFormat(ResultFormatType.JSON)
-            .warmupIterations(4)
+            .warmupIterations(3)
             .measurementIterations(3)
             .forks(3)
             .build()

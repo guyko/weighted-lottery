@@ -30,6 +30,9 @@ The _'simple'_ method uses the _WeightedLotteryBenchmark_ utility to obtain rand
 ### _'with repetitions'_ vs _'without repetitions'_ 
 Saperated benchmark classes for the two types of implementations
 
+### _'init'_ vs _'draw'_ 
+Eech benchmark is executed to measure preprocessing phase and draw phase separately and together
+
 ### One sample of k items vs many samples of k items
 Some implementations may be better when reusing the same state when weights are the same.  Using _'mTimesDrawKTimes'_ with a lambda, makes it possible to keep that state and reuse it (in this case, the state is the lottery instance)
 
@@ -48,22 +51,10 @@ benchmark.drawKTimes(new SimpleIntWeightedLottery(weights, ThreadLocalRandom::cu
 ```
 ## FAQ
 ### I wrote a new lottery class, which benchmark should I add it to ?
-If your class supports repetitions, you should add a method to the following classes: 
-
-* _OneSamplesWithRepetitionsRandomDistBenchmark_
-* _OneSamplesWithRepetitionsPowerDistBenchmark_
-* _ManySamplesWithRepetitionsRandomDistBenchmark_
-* _ManySamplesWithRepetitionsPowerDistBenchmark_
-
-Otherwise, you should add it to:
-
-* _OneSamplesNoRepetitionsRandomDistBenchmark_
-* _OneSamplesNoRepetitionsPowerDistBenchmark_
-* _ManySamplesNoRepetitionsRandomDistBenchmark_
-* _ManySamplesNoRepetitionsPowerDistBenchmark_
+You should add a method to either _LotteryNoRepetitionsBenchmark_ or _LotteryWithRepetitionsBenchmark_. We will execute the benchmark after merging your pull request 
 
 ### How do I execute the benchmark on my machine ?
-The main method of _WeightedLotteryBenchmark_ executes all 8 classes, and prints the outcome to jmh-result.json (note that it may take few hours to finish).
+The main method of _WeightedLotteryBenchmark_ executes all use cases, and prints the outcome to jmh-result.json (note that it may take few hours to finish).
 
 You can visualize the outcome by uploading the file to http://jmh.morethan.io/
 

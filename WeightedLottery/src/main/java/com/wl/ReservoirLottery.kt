@@ -1,33 +1,31 @@
 package com.wl
 
-import java.util.*
 import java.util.concurrent.ThreadLocalRandom
-import kotlin.NoSuchElementException
 
 class ReservoirLottery(private val weights: DoubleArray,
                        private val k: Int,
-                       private val random: () -> Random = { ThreadLocalRandom.current() }) : IntLottery {
+                       private val random: () -> ThreadLocalRandom = { ThreadLocalRandom.current() }) : IntLottery {
 
-    private val selectedToResorvoir = BooleanArray(weights.size)
-    private val reservoir = IntArray(k) {
-        var wsum = 0.0
-        var r = -1
-        var someNotSelected = -1
-        (0 until weights.size).asSequence()
-                .filter { !selectedToResorvoir[it] }
-                .forEach {
-                    someNotSelected = it
-                    wsum += weights[it].validate()
-                    if (random().nextDouble() < weights[it] / wsum) {
-                        r = it
-                    }
-                }
-        if (r == -1) {
-            r = someNotSelected
+    private val reservoir: IntArray
+
+    init {
+        val firstKLottery = SimpleIntWeightedLotteryNoRepetitions(weights = weights.sliceArray(0 until k), random = random)
+        var wSum = 0.0
+        reservoir = IntArray(k) {
+            wSum += (weights[it].validate() / k)
+            firstKLottery.draw()
         }
-        selectedToResorvoir[r] = true
-        r
+
+        (k + 1 until weights.size).forEach {
+            wSum += (weights[it].validate() / k)
+            val p = weights[it] / wSum
+            val j = random().nextDouble()
+            if (j <= p) {
+                reservoir[random().nextInt(k)] = it
+            }
+        }
     }
+
     private var cursor = 0
 
     override fun draw(): Int {
